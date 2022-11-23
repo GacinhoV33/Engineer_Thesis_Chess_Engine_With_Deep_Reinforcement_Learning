@@ -12,4 +12,5 @@ height = monitor_height/1.08
 pos_width = (monitor_width - width) // 2
 pos_height = (monitor_height - height) // 2
 
-
+svg_x = 150
+svg_y = 0
