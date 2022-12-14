@@ -129,9 +129,9 @@ class MainWindow(QWidget):
             i += 1
             print(f'Move {i}')
             QtTest.QTest.qWait(200)
-            self.playEngineMove(max_depth=4, color=chess.WHITE)
+            self.playEngineMove(max_depth=5, color=chess.WHITE)
             QtTest.QTest.qWait(200)
-            self.playEngineMove(max_depth=4, color=chess.BLACK)
+            self.playEngineMove(max_depth=5, color=chess.BLACK)
 
 
 if __name__ == "__main__":
