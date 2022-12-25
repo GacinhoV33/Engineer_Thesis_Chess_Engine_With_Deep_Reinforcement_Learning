@@ -10,9 +10,10 @@ from tensorflow.keras.models import load_model
 (4x6 + 4x5 + 16x4 + 4x4 + 16x2 ->impossible knight moves from end of board)
 Overall: 4672(4516) outputs
 """
-NUMBER_OF_CONSIDERED_POSITIONS = 8 # TODO if compute hard, change it to smaller number
+NUMBER_OF_CONSIDERED_POSITIONS = 5 # TODO if compute hard, change it to smaller number
 NUMBER_OF_POSSIBLE_MOVES = 4672
-INPUT_SHAPE = (19, 8, 8)
+INPUT_SHAPE = (75, 8, 8)
+POLICY_SHAPE = (NUMBER_OF_CONSIDERED_POSITIONS, 1)
 batch_size = 8 #?
 
 
@@ -20,7 +21,7 @@ def create_network(save_model: bool = True):
     input = Input(shape=INPUT_SHAPE, name='PositionEvaluationModel')
 
     """block 1"""
-    b1_conv2D_1 = Conv2D(filters=256, kernel_size=(3, 3), strides=1, padding='same', use_bias='false', name='b1_conv2d_1', kernel_initializer='normal')(input)
+    b1_conv2D_1 = Conv2D(filters=256, kernel_size=(3, 3), strides=1, padding='same', use_bias='false', name='b1_conv2d_1', kernel_initializer='normal', input_shape=INPUT_SHAPE)(input)
     b1_relu_1 = ReLU(name='b1_relu_1')(b1_conv2D_1)
     b1_bn_1 = BatchNormalization(epsilon=1e-3, momentum=0.999, name='b1_bn_1')(b1_relu_1)
 
@@ -91,3 +92,4 @@ def load_existing_model(name: str = 'basic_model'):
 create_network(True)
 model = load_existing_model()
 model.summary()
+
