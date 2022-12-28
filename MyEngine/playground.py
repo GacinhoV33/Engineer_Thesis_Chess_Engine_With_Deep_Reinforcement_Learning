@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import chess
+import chess.engine
 import numpy as np
 import random
 # board = chess.Board(fen='')
@@ -14,7 +15,26 @@ import random
 # board = chess.Board(fen=chess.STARTING_FEN)
 # print(board.outcome())
 
-print(random.choice([1, 2, 3, 4]))
+
+def stockfish_evaluation(board, time_limit=2.5):
+    engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
+    result = engine.analyse(board, chess.engine.Limit(time=time_limit))
+    stock_eval = result['score']
+    print(stock_eval.pov(color=chess.WHITE).mate())
+    #     print("White mat")
+    # elif stock_eval.pov(color=chess.WHITE)[1] == '-':
+    #     print("Black mat")
+    if result['score'].is_mate():
+        print(result['score'].pov(color=chess.BLACK))
+        return 400
+
+    else:
+        return result['score'].pov(color=chess.WHITE).cp
+    return result['score']
+
+board = chess.Board(fen='r5rk/5p1p/5R2/4B3/8/8/7P/7K w')
+print(stockfish_evaluation(board))
+
 #
 # codes, i = {}, 0
 # for nSquares in range(1,8):

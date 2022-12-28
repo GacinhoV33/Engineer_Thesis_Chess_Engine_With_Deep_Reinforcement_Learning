@@ -5,14 +5,11 @@ import math
 import chess
 from tensorflow.keras.models import Model
 import copy
-import numpy as np
 
 from MoveMapping import map_probabilities_to_moves
 from network import FEN_to_layers
-# from train import prediction_to_moves
 import random
-
-N_MCTS_ITERATION = 20
+from settings import N_MCTS_ITERATION
 
 
 class Edge:
@@ -48,12 +45,11 @@ class Node:
         input_to_network = [FEN_to_layers(self.history).reshape(1, 75, 8, 8)]
         policy_prediction, value_prediction = model.predict(input_to_network)
         actions = map_probabilities_to_moves(policy_prediction, self.board)
-        probability_sum = 0
+        probability_sum = 0.0
 
         """Take the prediction from network, find legal moves and corresponding probability values. Return list."""
-
         for edge, _ in self.childEdgeNode:
-            edge.P = actions[edge.move.uci()] # TODO or not uci
+            edge.P = actions[edge.move.uci()]
             probability_sum += edge.P
 
         for edge, _ in self.childEdgeNode:
@@ -101,7 +97,7 @@ class MCTS:
                     allBestChilds.append(child_node)
 
             if maxUctChild is None:
-                raise ValueError("Could not identify child with best uct value")
+                return self.select(random.choice(allBestChilds))
             else:
                 if len(allBestChilds) > 1:
                     return self.select(random.choice(allBestChilds))
@@ -119,11 +115,6 @@ class MCTS:
                 v = 1.0
             elif outcome == chess.BLACK:
                 v = -1.0
-
-            # else:
-            #     v = 0.0
-            #     print('Draw?')
-                # raise ValueError("Wrong output of game.")
             self.backpropagate(v, node.parentEdge)
 
     def backpropagate(self, v, edge):

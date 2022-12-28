@@ -1,7 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from model import NUMBER_OF_POSSIBLE_MOVES, INPUT_SHAPE, NUMBER_OF_CONSIDERED_POSITIONS
-
+from settings import NUMBER_OF_CONSIDERED_POSITIONS
 import chess
 import numpy as np
 from model import NUMBER_OF_POSSIBLE_MOVES
@@ -17,7 +16,6 @@ Number of input layers:
     - 1 turn
     75 layers
 """
-TOTAL_NUMBER_OF_LAYERS = 75
 CHESSBOARD_X = 8
 CHESSBOARD_Y = 8
 startFen = chess.STARTING_FEN
@@ -26,19 +24,13 @@ startFen = chess.STARTING_FEN
 def create_init_positions() -> list:
     return [startFen for _ in range(NUMBER_OF_CONSIDERED_POSITIONS)]
 
-# TODO -> think there is it correct way of giving init data. Should init probabilities be 0 for none position.
-
 
 def create_init_probabilities() -> np.array:
     return [np.zeros((NUMBER_OF_POSSIBLE_MOVES, 1)) for _ in range(NUMBER_OF_CONSIDERED_POSITIONS)]
 
 
 def create_init_position_eval() -> np.array:
-    return [np.zeros((NUMBER_OF_CONSIDERED_POSITIONS, 1)) for _ in range(NUMBER_OF_CONSIDERED_POSITIONS)]
-
-
-def layers_of_one_position(fen: str) -> list:
-    pass
+    return [0 for _ in range(NUMBER_OF_CONSIDERED_POSITIONS)]
 
 
 def FEN_to_layers(fen_history: list) -> np.array:
@@ -153,38 +145,8 @@ def FEN_to_layers(fen_history: list) -> np.array:
     inputLayer[73] = castleH8Layer
     inputLayer[74] = turnLayer
     return inputLayer
-    # return np.array([turnLayer,
-    #                  whiteKingLayer, whiteQueenLayer, whiteRooksLayer, whiteBishopsLayer, whiteKnightsLayer, whitePawnsLayer,
-    #                  blackKingLayer, blackQueenLayer, blackRooksLayer, blackBishopsLayer, blackKnightsLayer, blackPawnsLayer,
-    #                  castleA1Layer, castleA8Layer, castleH1Layer, castleH8Layer,
-    #                  firstRepetitionLayer, secondRepetitionLayer
-    #                  ])
 
     # counter plane -> not needed
     # progress plane -> ?not needed?
 
-# FEN_to_layers(startFen)
 
-
-def encode_moves_to_input(moves: list) -> np.array:
-    move_probabilities = np.zeros(shape=(1, NUMBER_OF_POSSIBLE_MOVES))
-
-    """
-    Ex. from a1 to a8
-    """
-
-
-    return
-
-
-def decode_output_to_moves(moves_probabilities: np.array) -> list:
-    for move_probability in moves_probabilities:
-        if move_probability != 0:
-            pass
-    return
-
-
-# # print(create_init_positions()[0].shape)
-#
-# h = FEN_to_layers([startFen for _ in range(5)])
-# print(h.shape)

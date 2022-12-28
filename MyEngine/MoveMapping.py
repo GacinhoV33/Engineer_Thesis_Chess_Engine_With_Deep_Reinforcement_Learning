@@ -6,7 +6,8 @@ from enum import Enum
 from typing import Tuple
 from chess import PieceType
 import numpy as np
-
+# import threading
+import concurrent.futures
 
 class QueenLikeDirection(Enum):
     """Enum types that represents 8 directions that may be chosen to make queen-like move, mentioned in alphazero papers"""
@@ -132,7 +133,6 @@ class Mapping:
 
 
 def map_valid_move(move: chess.Move, board: chess.Board) -> list:
-    """Think about remove passing chessboard #TODO"""
     from_square = move.from_square
     to_square = move.to_square
     piece = board.piece_at(from_square)
@@ -161,8 +161,8 @@ def map_valid_move(move: chess.Move, board: chess.Board) -> list:
 
 
 def map_probabilities_to_moves(move_probabilities: np.array, board: chess.Board):
-    move_probabilities = move_probabilities.reshape((73, 8, 8)) #TODO make variables of it
-    actions = {} #?
+    move_probabilities = move_probabilities.reshape((73, 8, 8))
+    actions = {}
     valid_moves = board.generate_legal_moves()
     outputs = list()
     while True:
@@ -173,5 +173,5 @@ def map_probabilities_to_moves(move_probabilities: np.array, board: chess.Board)
         outputs.append(map_valid_move(move, board))
 
     for move, plane_index, col, row in outputs:
-        actions[move.uci()] = move_probabilities[plane_index][col][row]
+        actions[move.uci()] = move_probabilities[plane_index][col][row] + np.random.random()/100
     return actions
