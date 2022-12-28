@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """MCTS Values"""
-N_MCTS_ITERATION = 300
+N_MCTS_ITERATION = 200
 LIMIT_OF_MOVES_PER_GAME = 100
 
 """Reinforcment Learning values"""
