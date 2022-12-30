@@ -12,6 +12,7 @@ import sqlite3
 import datetime
 from time import time
 from tqdm import tqdm
+import tensorflow
 
 def create_history_db():
     con = sqlite3.connect('./models/training_history.db')
@@ -100,11 +101,13 @@ def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_ite
 
                 print(f"Training process, game: {game_number+1}")
                 model.fit(x_train, y_train, epochs=NUMBER_OF_EPOCHS_PER_GAME)
+                print(f"Saving model: iteration: {iteration} - game: {game_number}")
+                model.save("models/" + model_name + ".keras")
+
         except Exception as e:
             print(f"Execption during training: {e}")
             print(f"Saving last valid model on iteration: {iteration}")
             model.save("models/" + model_name + ".keras")
-
 
     model.save('./models/' + model_name + '.keras')
     time_end = time()
@@ -126,5 +129,4 @@ def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_ite
 
 if __name__ == "__main__":
     train(model_name='model_12_res', number_of_iterations=NUMBER_OF_ITERATION_IN_TRAINING, number_of_games=NUMBER_OF_GAMES_PER_ITERATION)
-    # read_all()
-    # create_history_db()
+    read_all()

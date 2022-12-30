@@ -30,7 +30,7 @@ class SelfPlay:
         """List 5 positions in fen format"""
         history: list = create_init_positions()
         board: chess.Board = chess.Board(fen=starting_position)
-
+        stock_flag = False
         move_counter = 0
         while not board.is_game_over() and move_counter < LIMIT_OF_MOVES_PER_GAME:
             move_counter += 1
@@ -49,31 +49,35 @@ class SelfPlay:
             idx = np.where(rand_idx == 1)[0][0]
             nextMove = moveProbsSorted[idx]
             moveProbabilitiesData.append(moveProbsSorted)
-            print(f"move {move_counter}: {nextMove[0]}")
-            if move_counter % 10 == 0:
+            # print(f"move {move_counter}: {nextMove[0]}")
+            if move_counter % 50 == 0:
                 stock_eval = stockfish_evaluation(board, 2)
                 if stock_eval.is_mate():
                     move_counter += 1000
-            board.push(nextMove[0])
-            print(board)
+            if not stock_flag:
+                board.push(nextMove[0])
+            # print(board)
         else:
             result = board.outcome(claim_draw=True)
             stock_eval = stockfish_evaluation(board, 2.5)
             if stock_eval.is_mate():
+                stock_flag = True
                 if stock_eval.pov(color=chess.WHITE).mate() > 0:
                     stock_eval = 1200
                 elif stock_eval.pov(color=chess.WHITE).mate() < 0:
                     stock_eval = -1200
+                else:
+                    stock_eval = 0.0
             else:
                 stock_eval = stock_eval.pov(color=chess.WHITE).cp
             print(f"Stock eval: {stock_eval}")
             for j in range(0, len(moveProbabilitiesData)):
-                if result == chess.WHITE:
+                if stock_flag or result is None:
+                    positionEvalData.append(stock_eval / 1200)
+                elif result == chess.WHITE:
                     positionEvalData.append(1)
                 elif result == chess.BLACK:
                     positionEvalData.append(-1)
-                elif result is None:
-                    positionEvalData.append(stock_eval / 1200)
                 elif result == 0:
                     positionEvalData.append(0)
             return positionData, moveProbabilitiesData, positionEvalData

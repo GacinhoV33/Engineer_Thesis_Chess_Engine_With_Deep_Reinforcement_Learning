@@ -3,8 +3,37 @@
 
 import chess
 import chess.engine
+import chess.pgn
 import numpy as np
 import random
+import datetime
+
+
+def stockfish_evaluation(board, time_limit=2.5):
+    engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
+    result = engine.analyse(board, chess.engine.Limit(time=time_limit))
+    engine.close()
+    return result['score']
+
+x = stockfish_evaluation(chess.Board(fen=chess.STARTING_FEN)).pov(color=chess.WHITE).cp
+print(int(x))
+# board = chess.Board(fen=chess.STARTING_FEN)
+#
+# board.push(chess.Move.from_uci('a2a3'))
+# board.push(chess.Move.from_uci('a7a6'))
+# board.push(chess.Move.from_uci('a3a4'))
+# board.push(chess.Move.from_uci('a6a5'))
+# board.push(chess.Move.from_uci('a1a3'))
+# board.push(chess.Move.from_uci('a8a6'))
+#
+# node = chess.pgn.Game.from_board(board)
+# # print(node.headers['Result'])
+# print(node.game().mainline())
+# # board.push(chess.Move(chess.Square('a7'), chess.Square('a7')))
+# with open('pgn/pgn.txt', 'w') as file:
+#     file.write(str(node.game().mainline()))
+
+# board.push(chess.Move('a7a6'))
 # board = chess.Board(fen='')
 # arr1 = np.ones((8, 8))
 # arr2 = np.ones((8, 8))
@@ -14,26 +43,26 @@ import random
 #
 # board = chess.Board(fen=chess.STARTING_FEN)
 # print(board.outcome())
-
-
-def stockfish_evaluation(board, time_limit=2.5):
-    engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
-    result = engine.analyse(board, chess.engine.Limit(time=time_limit))
-    stock_eval = result['score']
-    print(stock_eval.pov(color=chess.WHITE).mate())
-    #     print("White mat")
-    # elif stock_eval.pov(color=chess.WHITE)[1] == '-':
-    #     print("Black mat")
-    if result['score'].is_mate():
-        print(result['score'].pov(color=chess.BLACK))
-        return 400
-
-    else:
-        return result['score'].pov(color=chess.WHITE).cp
-    return result['score']
-
-board = chess.Board(fen='r5rk/5p1p/5R2/4B3/8/8/7P/7K w')
-print(stockfish_evaluation(board))
+#
+#
+# def stockfish_evaluation(board, time_limit=2.5):
+#     engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
+#     result = engine.analyse(board, chess.engine.Limit(time=time_limit))
+#     stock_eval = result['score']
+#     print(stock_eval.pov(color=chess.WHITE).mate())
+#     #     print("White mat")
+#     # elif stock_eval.pov(color=chess.WHITE)[1] == '-':
+#     #     print("Black mat")
+#     if result['score'].is_mate():
+#         print(result['score'].pov(color=chess.BLACK))
+#         return 400
+#
+#     else:
+#         return result['score'].pov(color=chess.WHITE).cp
+#     return result['score']
+#
+# board = chess.Board(fen='r5rk/5p1p/5R2/4B3/8/8/7P/7K w')
+# print(stockfish_evaluation(board))
 
 #
 # codes, i = {}, 0

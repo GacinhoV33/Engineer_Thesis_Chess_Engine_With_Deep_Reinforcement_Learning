@@ -173,5 +173,5 @@ def map_probabilities_to_moves(move_probabilities: np.array, board: chess.Board)
         outputs.append(map_valid_move(move, board))
 
     for move, plane_index, col, row in outputs:
-        actions[move.uci()] = move_probabilities[plane_index][col][row] + np.random.random()/100
+        actions[move.uci()] = move_probabilities[plane_index][col][row] + np.random.random()/1000
     return actions

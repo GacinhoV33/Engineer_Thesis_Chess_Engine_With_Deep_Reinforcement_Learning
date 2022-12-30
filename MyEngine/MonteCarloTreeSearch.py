@@ -3,7 +3,7 @@
 import math
 
 import chess
-from tensorflow.keras.models import Model
+# from tensorflow.keras.models import Model
 import copy
 
 from MoveMapping import map_probabilities_to_moves
@@ -32,7 +32,7 @@ class Node:
             self.history.pop(0)
             self.history.append(board.fen())
 
-    def expand(self, model: Model):
+    def expand(self, model):
         """Legal moves in position -> Think about not taking all moves to cut the computional complexity"""
         for move in self.board.legal_moves:
             childBoard = copy.deepcopy(self.board)
@@ -62,11 +62,11 @@ class Node:
 
 
 class MCTS:
-    def __init__(self, model: Model):
+    def __init__(self, model):
         self.model = model
         self.rootNode = None
-        self.tau = 1.0
-        self.c_puct = 1.0
+        self.tau = 1 # the temperature -> best keep it on 1 or 1.2
+        self.c_puct = 3 # bigger value -> higher exploration
 
     def uctValue(self, edge, parentN):
         return self.c_puct * edge.P * (math.sqrt(parentN)/(1+edge.N))
