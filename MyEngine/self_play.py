@@ -49,14 +49,14 @@ class SelfPlay:
             idx = np.where(rand_idx == 1)[0][0]
             nextMove = moveProbsSorted[idx]
             moveProbabilitiesData.append(moveProbsSorted)
-            # print(f"move {move_counter}: {nextMove[0]}")
+            print(f"move {move_counter}: {nextMove[0]}")
             if move_counter % 50 == 0:
                 stock_eval = stockfish_evaluation(board, 2)
                 if stock_eval.is_mate():
                     move_counter += 1000
             if not stock_flag:
                 board.push(nextMove[0])
-            # print(board)
+            print(board)
         else:
             result = board.outcome(claim_draw=True)
             stock_eval = stockfish_evaluation(board, 2.5)
