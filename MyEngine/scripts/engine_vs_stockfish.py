@@ -14,7 +14,6 @@ N_OF_GAMES_PER_LEVEL = 10
 eng = Stockfish(r'C:\Users\gacek\Downloads\stockfish-11-win\stockfish-windows-2022-x86-64-avx2.exe')
 
 
-
 def best_Reinf_move(board, history):
     history.pop(0)
     history.append(board.fen())

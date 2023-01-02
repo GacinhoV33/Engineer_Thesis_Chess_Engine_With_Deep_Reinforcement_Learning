@@ -146,7 +146,4 @@ def FEN_to_layers(fen_history: list) -> np.array:
     inputLayer[74] = turnLayer
     return inputLayer
 
-    # counter plane -> not needed
-    # progress plane -> ?not needed?
-
 

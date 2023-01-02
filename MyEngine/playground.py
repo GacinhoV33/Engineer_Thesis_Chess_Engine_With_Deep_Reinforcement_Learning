@@ -5,8 +5,6 @@ import chess
 import chess.engine
 import chess.pgn
 import numpy as np
-import random
-import datetime
 
 
 def stockfish_evaluation(board, time_limit=2.5):
@@ -15,16 +13,29 @@ def stockfish_evaluation(board, time_limit=2.5):
     engine.close()
     return result['score']
 
-x = stockfish_evaluation(chess.Board(fen='rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4')).pov(color=chess.WHITE)
+arr1 = np.ones((41, 75, 8, 8))
+arr2 = np.zeros((20, 75, 8, 8))
+
+arr3 = np.append(arr1, arr2, axis=0)
+print(arr3.shape)
+# x = stockfish_evaluation(chess.Board(fen='rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4')).pov(color=chess.WHITE)
 # print(str(x)[1:])
 # print(int(-1)
 
-mate_fen = 'rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/8/PPPP1QPP/RNB1K1NR w KQkq - 0 4'
-board = chess.Board(fen=mate_fen)
-x2 = board.outcome().result()
-print(board.is_checkmate())
-print(x2)
+# x1 = [[2], [4], [6], [7]]
+# x2 = [[2], [4], [4], [3]]
 #
+# general = list()
+# for el in x1:
+#     general.append(el)
+# # general.append([el for el in x1])
+# print(general)
+# mate_fen = 'rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/8/PPPP1QPP/RNB1K1NR w KQkq - 0 4'
+# board = chess.Board(fen=mate_fen)
+# x2 = board.result()
+# print(board.is_checkmate())
+# print(x2)
+# #
 # board.push(chess.Move.from_uci('a2a3'))
 # board.push(chess.Move.from_uci('a7a6'))
 # board.push(chess.Move.from_uci('a3a4'))

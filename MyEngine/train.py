@@ -7,7 +7,8 @@ from network import FEN_to_layers
 import numpy as np
 from self_play import SelfPlay
 from settings import NUMBER_OF_EPOCHS_PER_GAME, MODEL_NAME, NUMBER_OF_CONSIDERED_POSITIONS, \
-    NUMBER_OF_GAMES_PER_ITERATION, NUMBER_OF_ITERATION_IN_TRAINING, N_MCTS_ITERATION, POLICY_SHAPE_3D
+    NUMBER_OF_GAMES_PER_ITERATION, NUMBER_OF_ITERATION_IN_TRAINING, N_MCTS_ITERATION, POLICY_SHAPE_3D, \
+    NUMBER_OF_EPOCHS_PER_ITERATION
 import sqlite3
 import datetime
 from time import time
@@ -82,54 +83,61 @@ def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_ite
         position_data_records = list()
         move_probabilities_data_records = list()
         position_evaluation_data_records = list()
-        try:
-            for game_number in range(number_of_games):
-                position_data, moveProbabilitiesData, positionEvalData = self_play.playGame()
-                """Increasing data"""
-                result = int(positionEvalData[-1])
-                if result == 1:
-                    white_wins += 1
-                elif result == -1:
-                    black_wins += 1
-                elif result == 0:
-                    draws += 1
-                else:
-                    games_not_ended += 1
+        x_general: np.array
+        y_general: list = []
+        for game_number in range(number_of_games):
+            position_data, moveProbabilitiesData, positionEvalData = self_play.playGame()
+            """Increasing data"""
+            result = positionEvalData[-1]
+            if 0.4 <= result:
+                white_wins += 1
+            elif -0.4 <= result <= 0.4:
+                draws += 1
+            elif result <= -0.4:
+                black_wins += 1
+            else:
+                games_not_ended += 1
 
-                moveProbabilitiesDataConverted = list()
-                for i, record in enumerate(moveProbabilitiesData[NUMBER_OF_CONSIDERED_POSITIONS:]):
-                    moveProbabilities = np.zeros(shape=POLICY_SHAPE_3D)
-                    for move, val, _, _ in record:
-                        move, plane_index, col, row = map_valid_move(move, chess.Board(position_data[i+NUMBER_OF_CONSIDERED_POSITIONS]))
-                        moveProbabilities[plane_index][col][row] = val
-                    moveProbabilitiesDataConverted.append(moveProbabilities.reshape((NUMBER_OF_POSSIBLE_MOVES, 1)))
+            moveProbabilitiesDataConverted = list()
+            for i, record in enumerate(moveProbabilitiesData[NUMBER_OF_CONSIDERED_POSITIONS:]):
+                moveProbabilities = np.zeros(shape=POLICY_SHAPE_3D)
+                for move, val, _, _ in record:
+                    move, plane_index, col, row = map_valid_move(move, chess.Board(position_data[i+NUMBER_OF_CONSIDERED_POSITIONS]))
+                    moveProbabilities[plane_index][col][row] = val
+                moveProbabilitiesDataConverted.append(moveProbabilities.reshape((NUMBER_OF_POSSIBLE_MOVES, 1)))
 
-                """Adding records to n-games database"""
-                move_probabilities_data_records.append(moveProbabilitiesDataConverted)
-                position_evaluation_data_records.append(position_data_records)
-                position_data_records.append(position_data)
+            """Adding records to n-games database"""
+            move_probabilities_data_records.append(moveProbabilitiesDataConverted)
+            position_evaluation_data_records.append(position_data_records)
+            position_data_records.append(position_data)
 
-                data_length = len(position_data)
-                posEvalDataTrain = [np.array([evaluation]) for evaluation in positionEvalData[NUMBER_OF_CONSIDERED_POSITIONS:]]
-                x_train = np.array([FEN_to_layers(position_data[NUMBER_OF_CONSIDERED_POSITIONS+i: NUMBER_OF_CONSIDERED_POSITIONS+i+NUMBER_OF_CONSIDERED_POSITIONS]) for i in range(data_length - NUMBER_OF_CONSIDERED_POSITIONS)]) # -1 is last position where is no available moves
-                y_train = [np.array(moveProbabilitiesDataConverted), np.array(posEvalDataTrain)]
+            data_length = len(position_data)
+            posEvalDataTrain = [np.array([evaluation]) for evaluation in positionEvalData[NUMBER_OF_CONSIDERED_POSITIONS:]]
+            if game_number == 0:
+                x_general = np.array([FEN_to_layers(position_data[NUMBER_OF_CONSIDERED_POSITIONS+i: NUMBER_OF_CONSIDERED_POSITIONS+i+NUMBER_OF_CONSIDERED_POSITIONS]) for i in range(data_length - NUMBER_OF_CONSIDERED_POSITIONS)])
+                y_general = [np.array(moveProbabilitiesDataConverted), np.array(posEvalDataTrain)]
+            else:
+                x_new_game = np.array([FEN_to_layers(position_data[NUMBER_OF_CONSIDERED_POSITIONS+i: NUMBER_OF_CONSIDERED_POSITIONS+i+NUMBER_OF_CONSIDERED_POSITIONS]) for i in range(data_length - NUMBER_OF_CONSIDERED_POSITIONS)]) # -1 is last position where is no available moves
+                x_last = x_general
+                y_last = y_general
+                x_general = np.append(x_last, x_new_game, axis=0)
+                y_general = [np.append(y_last[0], np.array(moveProbabilitiesDataConverted), axis=0), np.append(y_last[1], np.array(posEvalDataTrain), axis=0)]
 
-                print(f"Training process, game: {game_number+1}")
-                training_history = model.fit(x_train, y_train, epochs=NUMBER_OF_EPOCHS_PER_GAME)
-                data = training_history.history
-
-                """Plotting history of training."""
-                # loss = data['loss']
-                # policy_loss = data['policy_head_loss']
-                # value_loss = data['value_head_loss']
-                # plot_results(loss, policy_loss, value_loss, game_number, NUMBER_OF_EPOCHS_PER_GAME)
-
-                print(f"Saving model: iteration: {iteration + 1} - game: {game_number + 1}")
-                model.save("models/" + model_name + ".keras")
-
-        except Exception as e:
-            print(f"Execption during training: {e}")
-
+            print(f"Training process, game: {game_number+1}")
+            # training_history = model.fit(x_train, y_train, epochs=NUMBER_OF_EPOCHS_PER_GAME)
+            """Plotting history of training."""
+            # data = training_history.history
+            # loss = data['loss']
+            # policy_loss = data['policy_head_loss']
+            # value_loss = data['value_head_loss']
+            # plot_results(loss, policy_loss, value_loss, game_number, NUMBER_OF_EPOCHS_PER_GAME)
+            print(f"Saving model: iteration: {iteration + 1} - game: {game_number + 1}")
+        training_history = model.fit(x_general, y_general, epochs=NUMBER_OF_EPOCHS_PER_ITERATION)
+        data = training_history.history
+        loss = data['loss']
+        policy_loss = data['policy_head_loss']
+        value_loss = data['value_head_loss']
+        # plot_results(loss, policy_loss, value_loss, number_of_games, NUMBER_OF_EPOCHS_PER_GAME)
     model.save('./models/' + model_name + '.keras')
     time_end = time()
     time_of_training = time_end - time_start
