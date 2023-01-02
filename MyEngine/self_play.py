@@ -32,7 +32,7 @@ class SelfPlay:
         board: chess.Board = chess.Board(fen=starting_position)
         stock_flag = False
         move_counter = 0
-        while not board.is_game_over() and move_counter < LIMIT_OF_MOVES_PER_GAME:
+        while not board.is_game_over() and move_counter <= LIMIT_OF_MOVES_PER_GAME:
             move_counter += 1
             history.pop(0)
             positionData.append(board.fen()), history.append(board.fen())
@@ -50,21 +50,24 @@ class SelfPlay:
             nextMove = moveProbsSorted[idx]
             moveProbabilitiesData.append(moveProbsSorted)
             print(f"move {move_counter}: {nextMove[0]}")
+
             if move_counter % 50 == 0:
                 stock_eval = stockfish_evaluation(board, 2)
                 if stock_eval.is_mate():
                     move_counter += 1000
-            if not stock_flag:
+                    stock_flag = True
+            if not stock_flag or move_counter == LIMIT_OF_MOVES_PER_GAME:
                 board.push(nextMove[0])
-            print(board)
         else:
-            result = board.outcome(claim_draw=True)
+            print(board)
+            result = board.result()
             stock_eval = stockfish_evaluation(board, 2.5)
             if stock_eval.is_mate():
                 stock_flag = True
-                if stock_eval.pov(color=chess.WHITE).mate() > 0:
+                mate = stock_eval.pov(color=chess.WHITE)
+                if str(mate)[1] == '+':
                     stock_eval = 1200
-                elif stock_eval.pov(color=chess.WHITE).mate() < 0:
+                elif str(mate)[1] == '-':
                     stock_eval = -1200
                 else:
                     stock_eval = 0.0
@@ -72,14 +75,15 @@ class SelfPlay:
                 stock_eval = stock_eval.pov(color=chess.WHITE).cp
             print(f"Stock eval: {stock_eval}")
             for j in range(0, len(moveProbabilitiesData)):
-                if stock_flag or result is None:
+                if stock_flag or result == '*':
                     positionEvalData.append(stock_eval / 1200)
-                elif result == chess.WHITE:
+                elif result == '1-0':
                     positionEvalData.append(1)
-                elif result == chess.BLACK:
+                elif result == '0-1':
                     positionEvalData.append(-1)
-                elif result == 0:
+                elif result == '1/2-1/2':
                     positionEvalData.append(0)
+            print(f"Len of data position: {len(positionEvalData)}, len of postion data: {len(positionData)}")
             return positionData, moveProbabilitiesData, positionEvalData
 
 

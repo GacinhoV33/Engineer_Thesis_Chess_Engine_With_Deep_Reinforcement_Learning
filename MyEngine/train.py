@@ -12,7 +12,8 @@ import sqlite3
 import datetime
 from time import time
 from tqdm import tqdm
-import tensorflow
+import matplotlib.pyplot as plt
+
 
 def create_history_db():
     con = sqlite3.connect('./models/training_history.db')
@@ -52,6 +53,21 @@ def read_all():
     conn.close()
 
 
+def plot_results(loss, policy_loss, value_loss, game_number: int=0, n_epochs=20):
+    epochs = [i for i in range(1, n_epochs+1)]
+    plt.figure()
+    plt.plot(epochs, loss, label='Loss')
+    plt.plot(epochs, value_loss, label='Value head loss')
+    plt.plot(epochs, policy_loss, label='Policy head loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.title('Self-play game training history')
+    plt.legend()
+    plt.grid()
+    plt.show()
+    plt.savefig(f'Loss of game{game_number}')
+
+
 def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_iterations: int = 10):
     model = load_existing_model(name=model_name)
     self_play = SelfPlay(model=model)
@@ -66,12 +82,11 @@ def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_ite
         position_data_records = list()
         move_probabilities_data_records = list()
         position_evaluation_data_records = list()
-
         try:
             for game_number in range(number_of_games):
                 position_data, moveProbabilitiesData, positionEvalData = self_play.playGame()
                 """Increasing data"""
-                result = positionEvalData[-1]
+                result = int(positionEvalData[-1])
                 if result == 1:
                     white_wins += 1
                 elif result == -1:
@@ -100,14 +115,20 @@ def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_ite
                 y_train = [np.array(moveProbabilitiesDataConverted), np.array(posEvalDataTrain)]
 
                 print(f"Training process, game: {game_number+1}")
-                model.fit(x_train, y_train, epochs=NUMBER_OF_EPOCHS_PER_GAME)
-                print(f"Saving model: iteration: {iteration} - game: {game_number}")
+                training_history = model.fit(x_train, y_train, epochs=NUMBER_OF_EPOCHS_PER_GAME)
+                data = training_history.history
+
+                """Plotting history of training."""
+                # loss = data['loss']
+                # policy_loss = data['policy_head_loss']
+                # value_loss = data['value_head_loss']
+                # plot_results(loss, policy_loss, value_loss, game_number, NUMBER_OF_EPOCHS_PER_GAME)
+
+                print(f"Saving model: iteration: {iteration + 1} - game: {game_number + 1}")
                 model.save("models/" + model_name + ".keras")
 
         except Exception as e:
             print(f"Execption during training: {e}")
-            print(f"Saving last valid model on iteration: {iteration}")
-            model.save("models/" + model_name + ".keras")
 
     model.save('./models/' + model_name + '.keras')
     time_end = time()

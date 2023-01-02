@@ -3,7 +3,6 @@
 import math
 
 import chess
-# from tensorflow.keras.models import Model
 import copy
 
 from MoveMapping import map_probabilities_to_moves
@@ -62,7 +61,8 @@ class Node:
 
 
 class MCTS:
-    def __init__(self, model):
+    def __init__(self, model, N_OF_MCTS:int = N_MCTS_ITERATION):
+        self.N_OF_MCTS = N_OF_MCTS
         self.model = model
         self.rootNode = None
         self.tau = 1 # the temperature -> best keep it on 1 or 1.2
@@ -128,7 +128,7 @@ class MCTS:
     def search(self, rootNode):
         self.rootNode = rootNode
         _ = self.rootNode.expand(self.model)
-        for i in range(N_MCTS_ITERATION):
+        for i in range(self.N_OF_MCTS):
             selected_node = self.select(rootNode)
             self.expandAndEvaluate(selected_node)
         N_sum = 0

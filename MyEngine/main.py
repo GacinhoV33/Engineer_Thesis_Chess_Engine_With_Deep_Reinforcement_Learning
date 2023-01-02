@@ -2,9 +2,9 @@ import chess
 import chess.svg
 import chess.pgn
 
-from PyQt5.QtCore import QMutex, QTimer
+from PyQt5.QtCore import QMutex
 from PyQt5.QtSvg import QSvgWidget
-from PyQt5.QtWidgets import QApplication, QWidget, QInputDialog, QLineEdit, QLabel, QPushButton, QListWidget, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QLabel, QPushButton
 
 from network import create_init_positions
 from settings import width, height, pos_height, pos_width, svg_x, svg_y, num_2_letter
@@ -14,7 +14,7 @@ from random import choice, random
 from MonteCarloTreeSearch import Edge, Node, MCTS
 import numpy as np
 from model import load_existing_model
-import datetime
+
 
 class MainWindow(QWidget):
     def __init__(self, record_pgn=True):
@@ -101,11 +101,13 @@ class MainWindow(QWidget):
         self._updateBoard()
 
     def clickMoveButtonMethod(self, move=None):
+        print(self.chessboard.fen())
         user_input = self.moveInput.text()
         if not move:
             move = chess.Move.from_uci(user_input) # check from square
         if move in self.chessboard.legal_moves:
             self.chessboard.push(move)
+            print(self.chessboard.result() == '*')
             self.save_pgn()
             self._updateBoard()
             if self.isWhite:
@@ -172,18 +174,6 @@ class MainWindow(QWidget):
                 fields.append(f'{num_2_letter[field_x+1]}{field_y+1}')
 
         return fields
-
-    def translate_move(self, move, color: str = "white"):
-        if move == "O-O":
-            if color == "white":
-                move_trans = "e1f1"
-            else:
-                move_trans = "e8f8"
-        elif move == "O-O-O":
-            if color == "white":
-                move_trans = "e1c1"
-            else:
-                move_trans = 'e8c8'
 
     def play_game(self, random_game=True):
         if random_game:
@@ -288,10 +278,7 @@ class MinMaxEngine:
             else:
                 newCandidate = float("inf")
             for i in moveList:
-                # play the move i
-                # print(i)
                 self.board.push(i)
-
                 # get the value of move i
                 value = self.minmax_engine(newCandidate, depth+1)
                 #if maximizing(engine's turn)
@@ -322,69 +309,8 @@ class MinMaxEngine:
                 return move
 
 
-class Play:
-    def __init__(self, board=chess.Board):
-        self.board = board
-
-    def playHumanMove(self, move):
-        try:
-            self.board.push_san(move)
-        except Exception as e:
-            print("You tried to make ilelgal move")
-
-    def playEngineMove(self, maxDepth, color, engine_type: str = 'minmax'):
-        if engine_type == 'minmax':
-            engine = MinMaxEngine(self.board, maxDepth, color)
-            self.board.push(move=engine.getBestMove())
-        elif engine_type == 'Reinf':
-            engine = 0
-            # self.board.push(move='a1a2')
-        else:
-            raise ValueError("Wrong type of engine")
-
-
-
-    #
-    # def startGame(self):
-    #     color=None
-    #     while color != 'b' and color != 'w':
-    #         color = input('Color: ')
-    #     maxDepth = None
-    #     while not isinstance(maxDepth, int):
-    #         maxDepth = int(input("Choose depth"))
-    #     if color == 'b':
-    #         while not self.board.is_checkmate():
-    #             print('Engine is thinking... ')
-    #             self.playEngineMove(maxDepth, chess.WHITE)
-    #             # print(self.board)
-    #             self.playHumanMove()
-    #             # print(self.board)
-    #         # print(self.board)
-    #         # print(self.board.outcome())
-    #
-    #     elif color == 'w':
-    #         while not self.board.is_checkmate():
-    #             # print(self.board)
-    #             self.playHumanMove()
-    #             # print(self.board)
-    #             # print("The engine is thinking... ")
-    #             self.playEngineMove(maxDepth, chess.BLACK)
-    #
-    #     self.board.reset()
-    #     self.startGame()
-
-
-
-# def Game_check():
-#     newBoard = chess.Board()
-#     game = Play(newBoard)
-#     game.startGame()
-#
-
-
 if __name__ == "__main__":
     app = QApplication([])
     window = MainWindow()
     window.show()
-    # window.play_engine_vs_engine()
     app.exec()

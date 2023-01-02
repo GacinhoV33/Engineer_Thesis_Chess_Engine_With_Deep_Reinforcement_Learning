@@ -15,9 +15,15 @@ def stockfish_evaluation(board, time_limit=2.5):
     engine.close()
     return result['score']
 
-x = stockfish_evaluation(chess.Board(fen=chess.STARTING_FEN)).pov(color=chess.WHITE).cp
-print(int(x))
-# board = chess.Board(fen=chess.STARTING_FEN)
+x = stockfish_evaluation(chess.Board(fen='rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4')).pov(color=chess.WHITE)
+# print(str(x)[1:])
+# print(int(-1)
+
+mate_fen = 'rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/8/PPPP1QPP/RNB1K1NR w KQkq - 0 4'
+board = chess.Board(fen=mate_fen)
+x2 = board.outcome().result()
+print(board.is_checkmate())
+print(x2)
 #
 # board.push(chess.Move.from_uci('a2a3'))
 # board.push(chess.Move.from_uci('a7a6'))
