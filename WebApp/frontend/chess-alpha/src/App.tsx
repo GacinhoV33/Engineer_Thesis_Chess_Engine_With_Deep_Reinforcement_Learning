@@ -7,13 +7,14 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <NavbarComponent/>
+        {/* <NavbarComponent/>
         <Routes>
           <Route
             path='/play'
             element={<PlayGame/>}
           />
-        </Routes>
+        </Routes> */}
+        TEST OK
       </header>
     </div>
   );
