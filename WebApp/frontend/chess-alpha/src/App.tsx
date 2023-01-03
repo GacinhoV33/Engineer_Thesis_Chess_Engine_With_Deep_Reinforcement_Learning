@@ -14,7 +14,7 @@ function App() {
             path='/play'
             element={<PlayGame/>}
           />
-          fsakfkas
+          fsakfkas TEST
         </Routes>
       </header>
     </div>
