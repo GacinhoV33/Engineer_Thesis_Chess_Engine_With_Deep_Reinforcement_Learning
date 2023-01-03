@@ -22,13 +22,13 @@ jobs:
           node-version: "16.x"
 
       - name: npm install, build, and test
-        working-directory: WebApp/frontend/chess-alpha/
+        working-directory: WebApp/
         run: |
           npm install
           npm run build
 
       - name: Zip artifact for deployment
-        run: Compress-Archive ./WebApp/frontend/chess-alpha/build/* release.zip
+        run: Compress-Archive ./WebApp/build/* release.zip
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
