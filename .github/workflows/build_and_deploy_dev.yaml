@@ -56,6 +56,6 @@ jobs:
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
-          app-name: "dev-chess-engine-wa"
+          app-name: "chess-dev-app"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CHESS_ENGINE }}
           package: .
