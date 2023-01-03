@@ -14,11 +14,8 @@ function App() {
             path='/play'
             element={<PlayGame/>}
           />
-<<<<<<< HEAD:WebApp/src/App.tsx
           fsakfkas
-=======
           fsakfkas TEST
->>>>>>> 4c9b19948964672e3de429807b7a98f0ff1de4c4:WebApp/frontend/chess-alpha/src/App.tsx
         </Routes>
       </header>
     </div>
