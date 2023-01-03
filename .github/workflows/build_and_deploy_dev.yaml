@@ -57,6 +57,5 @@ jobs:
         id: deploy-to-webapp
         with:
           app-name: "dev-chess-engine-wa"
-          slot-name: "Production"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CHESS_ENGINE }}
           package: .
