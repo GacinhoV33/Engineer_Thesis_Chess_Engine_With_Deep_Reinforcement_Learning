@@ -1,6 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PlayGame from './components/PlayGame';
+import NavbarComponent from './components/NavbarComponent';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
             path='/play'
             element={<PlayGame/>}
           />
+          fsakfkas
         </Routes>
       </header>
     </div>
