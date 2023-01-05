@@ -1,43 +1,51 @@
 import React from 'react';
 import './RightMenu.scss';
 import Button from 'react-bootstrap/Button';
+import {GrUndo, GrRedo} from 'react-icons/gr';
+import IOSSwitch from './SwitchCustomed';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export interface RightMenuProps{
-
+    handleNewGame: () => void,
+    handleLoadPGN: () => void,
+    handleUndo: () => void,
 }
 
-const RightMenu: React.FC<RightMenuProps> = ({}) => {
+const RightMenu: React.FC<RightMenuProps> = ({handleNewGame, handleLoadPGN, handleUndo}) => {
   return (
     <div className='right-menu'>
-        <div style={{gridColumnStart: '1', gridColumnEnd: '2', gridRowStart: '1', gridRowEnd: '2', border: '1px solid white'}}>
-            1
-            Undo move
+        <div style={{gridColumnStart: '1', gridColumnEnd: '2', gridRowStart: '1', gridRowEnd: '2'}} onClick={handleNewGame}>
+            <div className='menu-tile' >
+                New Game
+            </div>
         </div>
-        <div style={{gridColumnStart: '1', gridColumnEnd: '2', gridRowStart: '2', gridRowEnd: '3', border: '1px solid white'}}>
-           2
-           New game
+        <div style={{gridColumnStart: '1', gridColumnEnd: '2', gridRowStart: '2', gridRowEnd: '3'}} onClick={handleUndo}>
+            <div className='menu-tile'>
+                Undo
+                <GrUndo/>
+            </div>
            {/* After clicking open modal with color of piece. */}
         </div>
-        <div style={{gridColumnStart: '1', gridColumnEnd: '2', gridRowStart: '3', gridRowEnd: '4', border: '1px solid white'}}>
-            3. Stockfish - My Engine 
+        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '1', gridRowEnd: '2'}} onClick={handleLoadPGN}>
+            <div className='menu-tile'>
+                Load PGN
+            </div>
         </div>
-        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '1', gridRowEnd: '2', border: '1px solid white'}}>
-            4. Previous
+        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '2', gridRowEnd: '3'}}>  
+            <div className='menu-tile'>
+                Redo
+                <GrRedo/>
+            </div>
         </div>
-        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '2', gridRowEnd: '3', border: '1px solid white'}}>
-            5
+        <div style={{gridColumnStart: '1', gridColumnEnd: '2', gridRowStart: '3', gridRowEnd: '4'}}>  
+            <div className='menu-tile'>
+                Draw
+            </div>
         </div>
-        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '3', gridRowEnd: '4', border: '1px solid white'}}>
-            6
-        </div>
-        <div style={{gridColumnStart: '3', gridColumnEnd: '4', gridRowStart: '1', gridRowEnd: '2', border: '1px solid white'}}>
-            7
-        </div>
-        <div style={{gridColumnStart: '3', gridColumnEnd: '4', gridRowStart: '2', gridRowEnd: '3', border: '1px solid white'}}>
-            8
-        </div>
-        <div style={{gridColumnStart: '3', gridColumnEnd: '4', gridRowStart: '3', gridRowEnd: '4', border: '1px solid white'}}>
-            9
+        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '3', gridRowEnd: '4'}}>  
+            <div className='menu-tile'>
+                Give up
+            </div>
         </div>
     </div>
   )

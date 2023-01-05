@@ -1,12 +1,24 @@
 .navbar-main{
     width: 100%;
-    height: 10vh;
-    // border: 2px solid #aaa;
-    
-    .navitem{
-        color: #EEE;
-        // :hover{
-        //     color: #A00;
-        // }
+    height: 13vh;
+    .brand{
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        font-size: 2vw;
+        gap: 10px;
+        color: #E2E2EE;
     }
+    .navContent{
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 1.5vw;
+        .navitem{
+            color: #EEE;
+            font-size: 1.75vw;
+            
+        }
+    }
+    
 }

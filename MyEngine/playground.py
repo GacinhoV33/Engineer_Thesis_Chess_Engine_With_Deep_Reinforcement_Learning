@@ -7,17 +7,17 @@ import chess.pgn
 import numpy as np
 
 
-def stockfish_evaluation(board, time_limit=2.5):
-    engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
-    result = engine.analyse(board, chess.engine.Limit(time=time_limit))
-    engine.close()
-    return result['score']
-
-arr1 = np.ones((41, 75, 8, 8))
-arr2 = np.zeros((20, 75, 8, 8))
-
-arr3 = np.append(arr1, arr2, axis=0)
-print(arr3.shape)
+# def stockfish_evaluation(board, time_limit=2.5):
+#     engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
+#     result = engine.analyse(board, chess.engine.Limit(time=time_limit))
+#     engine.close()
+#     return result['score']
+#
+# arr1 = np.ones((41, 75, 8, 8))
+# arr2 = np.zeros((20, 75, 8, 8))
+#
+# arr3 = np.append(arr1, arr2, axis=0)
+# print(arr3.shape)
 # x = stockfish_evaluation(chess.Board(fen='rnbqkbnr/2pp1ppp/pp6/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4')).pov(color=chess.WHITE)
 # print(str(x)[1:])
 # print(int(-1)

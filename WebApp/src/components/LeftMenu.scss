@@ -1,5 +1,69 @@
 .left-menu{
     width: 20vw;
-    height: 50vh;
-    border: 1px solid white;
+    height: 70vh;
+    // border: 1px solid white;
+
+    .header{
+        border-bottom: 1px solid white;
+        height: 10%;
+        font-size: 1.5vw;
+        font-weight: 500;
+        color: #EEE;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .game-content{
+        color: #EEE;
+        font-size: 1vw;
+        scroll-behavior: 'smooth';
+    }
+}
+
+.menu-header{
+    height: 70vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // overflow-y: scroll;
+    .main-left-menu{
+        max-height: 65vh;
+        width: 15vw;
+        color: #EEE;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: scroll;
+        ::-webkit-scrollbar{
+            display: none;
+        }
+        .table-history{
+            ::-webkit-scrollbar{
+                display: none;
+            }
+            overflow-y: auto;
+            th{
+                color: #EEE;
+                width: 100%;
+                text-align: center;
+                position: sticky;
+                top: 0px;
+        
+            }
+            td{
+                color: #DDD;
+            }
+        
+        }
+    }
+    ::-webkit-scrollbar{
+        display: none;
+    }    
+}
+
+
+::-webkit-scrollbar{
+    display: none;
 }

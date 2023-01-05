@@ -1,9 +1,36 @@
 .right-menu{
     width: 20vw;
-    height: 50vh;
-    border: 1px solid white;
+    height: 30vh;
+    // border: 1px solid white;
     display: grid;
-    color: white;
-    // grid-template-columns: repeat(3, 3fr);
+    color: #CCC;
+    font-size: 1.5vw;
+    gap: 10px;
+    // gap: 15px;
 
+    .menu-tile{
+        padding: 10px;
+        max-width: 10vw;
+        max-height: 20vh;
+        display: flex;
+        font-weight: 500;
+        flex-direction: column;
+        align-items: center; 
+        justify-content: center; 
+        height: 100%;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #CCC;
+        border-radius: 10px;
+        box-shadow: 2px 2px 2px #EEE;;
+    }
+
+    :hover{
+        .menu-tile{
+            
+            background-color: #312b23ab;
+            color: #EEE;
+            // color: red;
+        }
+    }
 }

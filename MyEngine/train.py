@@ -62,7 +62,7 @@ def plot_results(loss, policy_loss, value_loss, game_number: int=0, n_epochs=20)
     plt.plot(epochs, policy_loss, label='Policy head loss')
     plt.xlabel('Epoch')
     plt.ylabel('Loss')
-    plt.title('Self-play game training history')
+    plt.title('Self-play 50 games training history')
     plt.legend()
     plt.grid()
     plt.show()
@@ -124,20 +124,13 @@ def train(model_name: str = MODEL_NAME, number_of_games: int = 10, number_of_ite
                 y_general = [np.append(y_last[0], np.array(moveProbabilitiesDataConverted), axis=0), np.append(y_last[1], np.array(posEvalDataTrain), axis=0)]
 
             print(f"Training process, game: {game_number+1}")
-            # training_history = model.fit(x_train, y_train, epochs=NUMBER_OF_EPOCHS_PER_GAME)
-            """Plotting history of training."""
-            # data = training_history.history
-            # loss = data['loss']
-            # policy_loss = data['policy_head_loss']
-            # value_loss = data['value_head_loss']
-            # plot_results(loss, policy_loss, value_loss, game_number, NUMBER_OF_EPOCHS_PER_GAME)
-            print(f"Saving model: iteration: {iteration + 1} - game: {game_number + 1}")
+        """Plotting history of training."""
         training_history = model.fit(x_general, y_general, epochs=NUMBER_OF_EPOCHS_PER_ITERATION)
         data = training_history.history
         loss = data['loss']
         policy_loss = data['policy_head_loss']
         value_loss = data['value_head_loss']
-        # plot_results(loss, policy_loss, value_loss, number_of_games, NUMBER_OF_EPOCHS_PER_GAME)
+        plot_results(loss, policy_loss, value_loss, number_of_games, NUMBER_OF_EPOCHS_PER_GAME)
     model.save('./models/' + model_name + '.keras')
     time_end = time()
     time_of_training = time_end - time_start

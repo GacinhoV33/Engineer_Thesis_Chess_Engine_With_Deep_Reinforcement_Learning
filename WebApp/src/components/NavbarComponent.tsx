@@ -14,10 +14,10 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({}) => {
     <div className='navbar-main'>
         <Navbar fixed='top' >
           <Container>
-            <Nav className='me-auto'>
+            <Nav className='navContent'>
               <Navbar.Brand href="home" className='brand'>
-                LOGO
-                {/* <img src={logo_chess} alt='logo' style={{width: '5vw'}}/> */}
+                Deep Chess
+                <img src={require('./logo_grey.png')} alt='logo' style={{width: '3vw'}}/>
               </Navbar.Brand>
               <Nav.Link href='play' className='navitem'>
                 Play
