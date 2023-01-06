@@ -5,12 +5,16 @@ import { Chessboard} from 'react-chessboard';
 import deepcopy from 'deepcopy';
 import {Howl, Howler} from "howler";
 // import moveSound from './move_sound.wav'
+
+export type ChessColor = 'white' | 'black'
+
 export interface ChessboardComponentProps{
     game: Chess,
     setGame: React.Dispatch<React.SetStateAction<Chess>>,
+    boardOrientation: ChessColor
 }
 
-const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame }) => {
+const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation}) => {
     const sound = new Howl({
         src: require('./move_sound.wav')
     })
@@ -39,7 +43,7 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
 
     return (
     <div className='chessboard-main-styles'>
-        <Chessboard position={game.fen()} onPieceDrop={onPieceDrop}/>
+        <Chessboard position={game.fen()} onPieceDrop={onPieceDrop} boardOrientation={boardOrientation}/>
     </div>
   )
 }

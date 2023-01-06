@@ -22,7 +22,7 @@
 }
 
 .menu-header{
-    height: 70vh;
+    height: 65vh;
     width: 20vw;
     display: flex;
     flex-direction: column;
@@ -43,6 +43,7 @@
             ::-webkit-scrollbar{
                 display: none;
             }
+            height: 95%;
             overflow-y: auto;
             th{
                 color: #EEE;

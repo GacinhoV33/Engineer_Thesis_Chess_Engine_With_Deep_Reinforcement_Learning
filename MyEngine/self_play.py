@@ -9,7 +9,7 @@ from MonteCarloTreeSearch import Edge, Node, MCTS
 from model import load_existing_model
 from settings import LIMIT_OF_MOVES_PER_GAME
 import chess.engine
-
+import chess.pgn
 
 def stockfish_evaluation(board, time_limit=2.5):
     engine = chess.engine.SimpleEngine.popen_uci("./models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe")
@@ -45,17 +45,19 @@ class SelfPlay:
             moveProbsSorted = sorted(moveProbs, key= lambda x: x[1], reverse=True)
             probs = np.array([prob[1] for prob in moveProbsSorted])
             rand_idx = np.random.multinomial(1, probs)
-            policy, value = self.model.predict(FEN_to_layers(history).reshape(1, 75, 8, 8))
+            # policy, value = self.model.predict(FEN_to_layers(history).reshape(1, 75, 8, 8))
             idx = np.where(rand_idx == 1)[0][0]
             nextMove = moveProbsSorted[idx]
             moveProbabilitiesData.append(moveProbsSorted)
             print(f"move {move_counter}: {nextMove[0]}")
-            print("Approx value of position: ", value)
-            if move_counter % 50 == 0:
-                stock_eval = stockfish_evaluation(board, 2)
-                if stock_eval.is_mate():
-                    move_counter += 1000
-                    stock_flag = True
+            print(chess.pgn.Game.from_board(board))
+
+            # print("Approx value of position: ", value)
+            # if move_counter % 200 == 0:
+            #     stock_eval = stockfish_evaluation(board, 2)
+            #     if stock_eval.is_mate():
+            #         move_counter += 1000
+            #         stock_flag = True
             if not stock_flag or move_counter == LIMIT_OF_MOVES_PER_GAME:
                 board.push(nextMove[0])
         else:
@@ -74,6 +76,7 @@ class SelfPlay:
             else:
                 stock_eval = stock_eval.pov(color=chess.WHITE).cp
             print(f"Stock eval: {stock_eval}")
+            print(chess.pgn.Game.from_board(board))
             for j in range(0, len(moveProbabilitiesData)):
                 if stock_flag or result == '*':
                     positionEvalData.append(stock_eval / 1200)

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ChessboardComponent from "./Chessboard";
+import ChessboardComponent, { ChessColor } from "./Chessboard";
 import PlayModes from "./PlayModes";
 import "./PlayGame.scss";
 import GameEvaluation from "./GameEvaluation";
@@ -23,6 +23,8 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [game, setGame] = useState<Chess>(new Chess());
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLoadModal, setShowLoadModal] = useState<boolean>(false);
+  const [isAlpha, setIsAlpha] = useState<boolean>(true);
+  const [boardOrientation, setBoardOrientation] = useState<ChessColor>('white')
 
   function handleNewGame(){
     setShowModal(true);
@@ -39,6 +41,15 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setGame(gameCopy);
   }
 
+  function handleDraw(){
+    //TODO show rezult somewhere
+    setGame(new Chess())
+  }
+
+  function handleGiveUp(){
+    setGame(new Chess())
+  }
+
   return (
     <div className="playgame-main">
       {/* <PlayModes currentMode={currentMode} /> */}
@@ -47,7 +58,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
         <div className="chessboard-and-eval">
           <div style={{color: 'white', display: "flex", justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
               <div style={{fontWeight: '500'}}>
-                AlphaZero Evaluation
+                {isAlpha ? 'AlphaZero Evaluation' : 'Stockfish Evaluation'}
               </div>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <div style={{width: '1vw'}}>
@@ -59,20 +70,20 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
             </div>
           </div>
-          <ChessboardComponent game={game} setGame={setGame}/>
+          <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation}/>
         </div>
         <div style={{display: 'flex', flexDirection: 'column', gap: '1vh'}}>
-          <div style={{display: 'flex', flexDirection: 'column', gap: '1vh', color: '#EEE', fontSize: '1.25vw', width: '50%', fontWeight: '500'}}>
+          <div style={{display: 'flex', flexDirection: 'column', gap: '1vh', color: '#EEE', fontSize: '1.25vw', width: '50%', fontWeight: '500', paddingLeft: '5px'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>
                   Stockfish
-                  <IOSSwitch  defaultChecked />
+                  <IOSSwitch />
               </div>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>
                   AlphaZero
                   <IOSSwitch  defaultChecked />
               </div>
           </div>
-          <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo}/>
+          <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo} handleDraw={handleDraw} handleGiveUp={handleGiveUp}/>
           {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal}/>}
           {showLoadModal && <LoadPGNModal setGame={setGame} setShowLoadModal={setShowLoadModal} showLoadModal={showLoadModal}/>}
         </div>
