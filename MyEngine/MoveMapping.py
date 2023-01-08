@@ -6,8 +6,7 @@ from enum import Enum
 from typing import Tuple
 from chess import PieceType
 import numpy as np
-# import threading
-import concurrent.futures
+
 
 class QueenLikeDirection(Enum):
     """Enum types that represents 8 directions that may be chosen to make queen-like move, mentioned in alphazero papers"""
@@ -76,21 +75,18 @@ class Mapping:
     def get_queenlike_move(from_square: int, to_square: int) -> Tuple[QueenLikeDirection, int]:
         diff = from_square - to_square
         if diff % 8 == 0:
-            # north and south
             if diff > 0:
                 direction = QueenLikeDirection.SOUTH
             else:
                 direction = QueenLikeDirection.NORTH
             distance = int(diff / 8)
         elif diff % 9 == 0:
-            # southwest and northeast
             if diff > 0:
                 direction = QueenLikeDirection.SOUTHWEST
             else:
                 direction = QueenLikeDirection.NORTHEAST
             distance = np.abs(int(diff / 8))
         elif from_square // 8 == to_square // 8:
-            # east and west
             if diff > 0:
                 direction = QueenLikeDirection.WEST
             else:
@@ -107,7 +103,6 @@ class Mapping:
         return (direction, distance)
 
     mapper = {
-        # queens
         QueenLikeDirection.NORTHWEST: [0, 1, 2, 3, 4, 5, 6],
         QueenLikeDirection.NORTH: [7, 8, 9, 10, 11, 12, 13],
         QueenLikeDirection.NORTHEAST: [14, 15, 16, 17, 18, 19, 20],
@@ -116,7 +111,6 @@ class Mapping:
         QueenLikeDirection.SOUTH: [35, 36, 37, 38, 39, 40, 41],
         QueenLikeDirection.SOUTHWEST: [42, 43, 44, 45, 46, 47, 48],
         QueenLikeDirection.WEST: [49, 50, 51, 52, 53, 54, 55],
-        # knights
         KnightMove.NORTH_LEFT: 56,
         KnightMove.NORTH_RIGHT: 57,
         KnightMove.EAST_UP: 58,
@@ -125,7 +119,6 @@ class Mapping:
         KnightMove.SOUTH_LEFT: 61,
         KnightMove.WEST_DOWN: 62,
         KnightMove.WEST_UP: 63,
-        # underpromotions
         UnderPromotion.KNIGHT: [64, 65, 66],
         UnderPromotion.BISHOP: [67, 68, 69],
         UnderPromotion.ROOK: [70, 71, 72]
@@ -144,17 +137,13 @@ def map_valid_move(move: chess.Move, board: chess.Board) -> list:
             move.promotion, from_square, to_square)
         plane_index = Mapping.mapper[piece_type][1 - direction]
     else:
-        # find the correct plane based on from_square and move_square
         if piece.piece_type == chess.KNIGHT:
-            # get direction
             direction = Mapping.get_knight_move(from_square, to_square)
             plane_index = Mapping.mapper[direction]
         else:
-            # get direction of queen-type move
             direction, distance = Mapping.get_queenlike_move(
                 from_square, to_square)
             plane_index = Mapping.mapper[direction][np.abs(distance) - 1]
-        # create a mask with only valid moves
     row = from_square % 8
     col = 7 - (from_square // 8)
     return (move, plane_index, row, col)

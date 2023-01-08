@@ -55,10 +55,10 @@ const LeftMenu: React.FC<LeftMenuProps> = ({game}) => {
         {
           moves.map((move, index) => (
             <tr key={moves[index]}>
-              <td style={{width: '2vw'}} > {moves[index]} </td>
-              <td style={{width: '2vw'}}> {white[index]} </td>
+              <td style={{width: '3vw'}} > {moves[index]} </td>
+              <td style={{width: '6vw'}}> {white[index]} </td>
               {/* <td style={{width: '2vw'}}> {black} </td> */}
-              {index + 1 <= black.length ? <td style={{width: '2vw'}}>{black[index]}</td> : <td style={{width: '2vw'}}></td>}
+              {index + 1 <= black.length ? <td style={{width: '6vw'}}>{black[index]}</td> : <td style={{width: '6vw'}}></td>}
             </tr>
           ))
         }

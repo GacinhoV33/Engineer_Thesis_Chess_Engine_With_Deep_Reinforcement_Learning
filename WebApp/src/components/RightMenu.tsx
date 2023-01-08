@@ -11,10 +11,10 @@ export interface RightMenuProps{
     handleUndo: () => void,
     handleDraw: () => void,
     handleGiveUp: () => void,
-
+    handleRedo: () => void,
 }
 
-const RightMenu: React.FC<RightMenuProps> = ({handleNewGame, handleLoadPGN, handleUndo, handleDraw, handleGiveUp}) => {
+const RightMenu: React.FC<RightMenuProps> = ({handleNewGame, handleLoadPGN, handleUndo, handleDraw, handleGiveUp, handleRedo}) => {
 
 const [showDraw, setShowDraw] = useState<boolean>(true);
 const [showGiveUp, setShowGiveUp] = useState<boolean>(true);
@@ -56,7 +56,7 @@ const [showGiveUp, setShowGiveUp] = useState<boolean>(true);
                 Load PGN
             </div>
         </div>
-        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '2', gridRowEnd: '3'}}>  
+        <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '2', gridRowEnd: '3'}} onClick={handleRedo}>  
             <div className='menu-tile'>
                 Redo
                 <GrRedo/>

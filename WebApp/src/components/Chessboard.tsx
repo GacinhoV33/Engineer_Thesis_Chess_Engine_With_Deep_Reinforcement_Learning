@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import './Chessboard.scss';
-import { Square, Chess, Piece } from 'chess.js';
+import { Square, Chess, Piece, Move } from 'chess.js';
 import { Chessboard} from 'react-chessboard';
 import deepcopy from 'deepcopy';
 import {Howl, Howler} from "howler";
-// import moveSound from './move_sound.wav'
 
 export type ChessColor = 'white' | 'black'
 
@@ -19,12 +18,11 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         src: require('./sounds/move_sound.wav')
     })
     Howler.volume(0.7);
-    function makeMove(move: any){
+    function makeMove(move: Move){
         const gameCopy = new Chess();
         gameCopy.loadPgn(game.pgn());
         const result = gameCopy.move(move);
         setGame(gameCopy);
-        console.log(game.pgn())
         return result;
     }
 
@@ -32,7 +30,8 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         const move = makeMove({
             from: sourceSquare,
             to: targetSquare,
-        });
+            // promotion: 'q' TODO
+        } as Move);
         if (move === null){
             return false;
         }

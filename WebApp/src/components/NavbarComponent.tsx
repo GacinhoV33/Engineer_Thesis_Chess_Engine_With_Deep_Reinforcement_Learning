@@ -11,7 +11,7 @@ export interface NavbarComponentProps{
 const NavbarComponent: React.FC<NavbarComponentProps> = ({}) => {
   return (
     <div className='navbar-main'>
-        <Navbar fixed='top' >
+        <Navbar>
           <Container>
             <Nav className='navContent'>
               <Navbar.Brand href="home" className='brand'>

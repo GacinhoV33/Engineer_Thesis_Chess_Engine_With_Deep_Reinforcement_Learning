@@ -6,12 +6,9 @@ import GameEvaluation from "./GameEvaluation";
 import RightMenu from "./RightMenu";
 import LeftMenu from "./LeftMenu";
 import IOSSwitch from "./SwitchCustomed";
-import { Chess } from "chess.js";
+import { Chess, Move } from "chess.js";
 import NewGameModal from "./NewGameModal";
 import LoadPGNModal from "./LoadPGNModal";
-import { ToggleButtonGroup } from "@mui/material";
-import { ToggleButton } from "@mui/material";
-
 
 export interface PlayGameProps {}
 export type PlayMode =
@@ -28,7 +25,10 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [isAlpha, setIsAlpha] = useState<boolean>(true);
   const [isStockfish, setIsStockfish] = useState<boolean>(false);
   const [boardOrientation, setBoardOrientation] = useState<ChessColor>('white')
-  // const [isGameStarted, setGameIsStarted] = useState<boolean>(false); TODO?
+  const [lastMoveStack, setLastMoveStack] = useState<Move[]>([])
+
+  // AlphaZero Engine stuff
+
   function handleNewGame(){
     setShowModal(true);
   }
@@ -38,14 +38,14 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   }
 
   function handleUndo(){
-    game.undo();
+    const undoMove = game.undo();
+    if(undoMove) setLastMoveStack(prev => [...prev, undoMove]);
     const gameCopy = new Chess();
     gameCopy.loadPgn(game.pgn());
     setGame(gameCopy);
   }
 
   function handleDraw(){
-    //TODO show rezult somewhere
     setGame(new Chess())
   }
 
@@ -58,20 +58,18 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setIsAlpha(prev => !prev)
   }
 
-  function handleColor(requestedColor: ChessColor){
-    if(requestedColor !== boardOrientation){
-      if(boardOrientation === 'white'){
-        setBoardOrientation('black')
-      }
-      else{
-        setBoardOrientation('white')
-      }
+  function handleRedo(){
+    const newGame = new Chess()
+    newGame.loadPgn(game.pgn())
+    const redoMove = lastMoveStack.pop();
+    if(redoMove) {
+      newGame.move(redoMove)
+      setGame(newGame);
     }
   }
 
   return (
     <div className="playgame-main">
-      {/* <PlayModes currentMode={currentMode} /> */}
       <div className="chessboard-menu-position">
         <LeftMenu game={game} />
         <div className="chessboard-and-eval">
@@ -103,14 +101,24 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
                   <IOSSwitch  defaultChecked  onClick={handleEngine} checked={isAlpha}/>
               </div>
           </div>
-          <div style={{width: '50%', padding: '5%'}}>
-            <ToggleButtonGroup color='standard' value={1} exclusive aria-label="Platform">
-              <ToggleButton value={0} style={{border: '1px solid #EEE'}} onClick={() => handleColor('white')}> White </ToggleButton>
-              <ToggleButton value={1} style={{background: '#EEE'}} onClick={() => handleColor('black')}>Black</ToggleButton>
-            </ToggleButtonGroup>
+          <div style={{width: '50%', padding: '5%',}}>
+              <div style={{display: 'flex', gap: '5px', justifyContent: 'center', alignItems: 'center', marginTop: '1vh'}}>
+                <div 
+                  style={{height: '3vh',  background: '#EEE', width: '40%', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+                  className={boardOrientation === 'white' ? 'border-orientation' : undefined}
+                  onClick={() => setBoardOrientation('white')}
+                >
+                </div>
+                <div 
+                  style={{height: '3vh',  background: '#000', width: '40%', cursor: 'pointer', display: 'flex', justifyContent: 'center', alignItems: 'center'}} 
+                  className={boardOrientation === 'black' ? 'border-orientation' : undefined}
+                  onClick={() => setBoardOrientation('black')}
+                >
+                </div>
+              </div>
           </div>
           </div>
-          <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo} handleDraw={handleDraw} handleGiveUp={handleGiveUp}/>
+          <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo} handleDraw={handleDraw} handleGiveUp={handleGiveUp} handleRedo={handleRedo}/>
           {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal}/>}
           {showLoadModal && <LoadPGNModal setGame={setGame} setShowLoadModal={setShowLoadModal} showLoadModal={showLoadModal}/>}
         </div>
