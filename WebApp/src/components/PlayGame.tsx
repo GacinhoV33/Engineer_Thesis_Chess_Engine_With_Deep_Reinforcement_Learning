@@ -9,7 +9,9 @@ import IOSSwitch from "./SwitchCustomed";
 import { Chess } from "chess.js";
 import NewGameModal from "./NewGameModal";
 import LoadPGNModal from "./LoadPGNModal";
-// import chesspawn2 from "../chesspawn2.png";
+import { ToggleButtonGroup } from "@mui/material";
+import { ToggleButton } from "@mui/material";
+
 
 export interface PlayGameProps {}
 export type PlayMode =
@@ -24,8 +26,9 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLoadModal, setShowLoadModal] = useState<boolean>(false);
   const [isAlpha, setIsAlpha] = useState<boolean>(true);
+  const [isStockfish, setIsStockfish] = useState<boolean>(false);
   const [boardOrientation, setBoardOrientation] = useState<ChessColor>('white')
-
+  // const [isGameStarted, setGameIsStarted] = useState<boolean>(false); TODO?
   function handleNewGame(){
     setShowModal(true);
   }
@@ -50,6 +53,22 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setGame(new Chess())
   }
 
+  function handleEngine(){
+    setIsStockfish(prev => !prev)
+    setIsAlpha(prev => !prev)
+  }
+
+  function handleColor(requestedColor: ChessColor){
+    if(requestedColor !== boardOrientation){
+      if(boardOrientation === 'white'){
+        setBoardOrientation('black')
+      }
+      else{
+        setBoardOrientation('white')
+      }
+    }
+  }
+
   return (
     <div className="playgame-main">
       {/* <PlayModes currentMode={currentMode} /> */}
@@ -62,26 +81,34 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <div style={{width: '1vw'}}>
-                <img src={require('./chess2.png')} alt='lol' style={{width: '1vw'}}/>
+                <img src={require('./images/chess2.png')} alt='lol' style={{width: '1vw'}}/>
               </div>
-              <GameEvaluation value={-0.2} engineType='MyEngine'/>
+              <GameEvaluation value={isAlpha ? -0.2 : 0.2} engineType='MyEngine'/>
               <div style={{width: '1vw'}}>
-                <img src={require('./chess1.png')} alt='lol' style={{width: '1vw'}}/>
+                <img src={require('./images/chess1.png')} alt='lol' style={{width: '1vw'}}/>
               </div>
             </div>
           </div>
           <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation}/>
         </div>
         <div style={{display: 'flex', flexDirection: 'column', gap: '1vh'}}>
+          <div style={{display: 'flex'}}>
           <div style={{display: 'flex', flexDirection: 'column', gap: '1vh', color: '#EEE', fontSize: '1.25vw', width: '50%', fontWeight: '500', paddingLeft: '5px'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>
                   Stockfish
-                  <IOSSwitch />
+                  <IOSSwitch onClick={handleEngine} checked={isStockfish}/>
               </div>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>
                   AlphaZero
-                  <IOSSwitch  defaultChecked />
+                  <IOSSwitch  defaultChecked  onClick={handleEngine} checked={isAlpha}/>
               </div>
+          </div>
+          <div style={{width: '50%', padding: '5%'}}>
+            <ToggleButtonGroup color='standard' value={1} exclusive aria-label="Platform">
+              <ToggleButton value={0} style={{border: '1px solid #EEE'}} onClick={() => handleColor('white')}> White </ToggleButton>
+              <ToggleButton value={1} style={{background: '#EEE'}} onClick={() => handleColor('black')}>Black</ToggleButton>
+            </ToggleButtonGroup>
+          </div>
           </div>
           <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo} handleDraw={handleDraw} handleGiveUp={handleGiveUp}/>
           {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal}/>}

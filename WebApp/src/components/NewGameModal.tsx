@@ -26,10 +26,10 @@ const NewGameModal: React.FC<NewGameModalProps> = ({showModal, setNewGame, setSh
           Do you really want start new game?
         </Modal.Title>
         <Modal.Body style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly'}}>
-          <Button variant='secondary' style={{width: '8vw'}} onClick={handleYes}>
+          <Button variant='secondary' style={{width: '6vw'}} onClick={handleYes}>
             Yes
           </Button>
-          <Button variant='secondary' style={{width: '8vw'}} onClick={handleNo}>
+          <Button variant='secondary' style={{width: '6vw'}} onClick={handleNo}>
             No
           </Button>
         </Modal.Body>

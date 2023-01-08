@@ -25,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "react-loaders": "^3.0.1",
+    "react-pdf": "^6.2.1",
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "sass": "^1.57.1",
@@ -56,6 +57,7 @@
     ]
   },
   "devDependencies": {
-    "@types/howler": "^2.2.7"
+    "@types/howler": "^2.2.7",
+    "@types/react-pdf": "^6.2.0"
   }
 }

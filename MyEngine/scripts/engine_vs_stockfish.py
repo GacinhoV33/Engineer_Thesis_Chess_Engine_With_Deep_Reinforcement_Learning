@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import chess
-import stockfish
-from stockfish import Stockfish
+# import stockfish
+from stockfish import Stockfish, StockfishException
 from MonteCarloTreeSearch import Edge, Node, MCTS
 import numpy as np
 from network import create_init_positions
@@ -11,8 +11,29 @@ from model import load_model
 N_OF_GAMES_PER_LEVEL = 10
 
 # model = load_model('../models/model_12_res.keras')
-eng = Stockfish(r'C:\Users\gacek\Downloads\stockfish-11-win\stockfish-windows-2022-x86-64-avx2.exe')
+# eng = Stockfish(r'C:\Users\gacek\Downloads\stockfish-11-win\stockfish-windows-2022-x86-64-avx2.exe')
 
+options = {
+    "Debug Log File": "",
+    "Contempt": 0,
+    "Min Split Depth": 0,
+    "Threads": 1, # More threads will make the engine stronger, but should be kept at less than the number of logical processors on your computer.
+    "Ponder": "false",
+    "Hash": 16, # Default size is 16 MB. It's recommended that you increase this value, but keep it as some power of 2. E.g., if you're fine using 2 GB of RAM, set Hash to 2048 (11th power of 2).
+    "MultiPV": 1,
+    "Skill Level": 10,
+    "Move Overhead": 5,
+    "Minimum Thinking Time": 20,
+    "Slow Mover": 100,
+    "UCI_Chess960": "false",
+    "UCI_LimitStrength": "false",
+    "UCI_Elo": 500
+}
+
+engine = Stockfish(path="C:/Users/gacek/Desktop/VII_Semestr/Inzynierka/Repo/Engineer_Thesis_Chess_Engine_With_Deep_Reinforcement_Learning/MyEngine/models/stockfish_15.1_win_x64_popcnt/stockfish-windows-2022-x86-64-modern.exe", parameters=options)
+engine.set_fen_position(chess.STARTING_FEN)
+print(engine.get_best_move())
+model = load_model('../models/model_12_res.keras')
 
 def best_Reinf_move(board, history):
     history.pop(0)
@@ -24,9 +45,9 @@ def best_Reinf_move(board, history):
     moveProbsSorted = sorted(moveProbs, key=lambda x: x[1], reverse=True)
     probs = np.array([prob[1] for prob in moveProbsSorted])
     rand_idx = np.random.multinomial(1, probs)
-    idx = np.where(rand_idx == 1)[0][0]
-    nextMove = moveProbsSorted[idx]
-    return nextMove
+    # idx = np.where(rand_idx == 1)[0][0]
+    nextMove = moveProbsSorted[0]
+    return nextMove[0]
 
 
 def getStockfishMove(board):
@@ -46,6 +67,7 @@ def playGame(level: int, stockfish_color: chess.Color) -> int:
             print(board)
             white_move = getStockfishMove(board)
             print(white_move)
+            print(f"White move: {white_move}")
             board.push_uci(white_move)
             history.pop(0)
             history.append(board.fen())
@@ -53,7 +75,7 @@ def playGame(level: int, stockfish_color: chess.Color) -> int:
             black_move = best_Reinf_move(board, history)
             board.push(black_move)
             print(board)
-            print(f"move: {black_move}")
+            print(f"Black move: {black_move}")
 
     elif stockfish_color == chess.BLACK:
         while board.is_game_over():
@@ -61,8 +83,8 @@ def playGame(level: int, stockfish_color: chess.Color) -> int:
             white_move = best_Reinf_move(board, history)
             board.push(white_move)
             """Stockfish with Black"""
-            black_move = getStockfishMove()
-            board.push(black_move)
+            black_move = getStockfishMove(board)
+            board.push_uci(black_move)
             history.pop(0)
             history.append(board.fen())
 
@@ -107,5 +129,5 @@ def play_vs_stockfish(level: int):
 
 if __name__ == "__main__":
     # main()
-    # playGame(1, chess.WHITE)
+    playGame(1, chess.WHITE)
     pass

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PlayGame from './components/PlayGame';
 import NavbarComponent from './components/NavbarComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Thesis from './components/Thesis';
 
 function App() {
   return (
@@ -14,8 +15,10 @@ function App() {
             path='/play'
             element={<PlayGame/>}
           />
-          fsakfkas
-          fsakfkas TEST
+          <Route
+            element={<Thesis/>}
+            path='/thesis'
+          />
         </Routes>
       </header>
     </div>

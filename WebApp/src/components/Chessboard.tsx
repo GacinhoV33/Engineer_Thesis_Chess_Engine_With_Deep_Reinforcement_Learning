@@ -16,7 +16,7 @@ export interface ChessboardComponentProps{
 
 const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation}) => {
     const sound = new Howl({
-        src: require('./move_sound.wav')
+        src: require('./sounds/move_sound.wav')
     })
     Howler.volume(0.7);
     function makeMove(move: any){
