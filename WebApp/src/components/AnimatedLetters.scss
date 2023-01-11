@@ -1,0 +1,18 @@
+@import 'animate.css';
+
+.text-animate{
+    display: inline-block;
+    opacity: 0;
+    animation: bounceIn;
+    animation-duration: 1s;
+    color: #eee;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+    min-width: 10px;
+}
+
+@for $i from 1 through 55 {
+    .text-animate._#{$i} {
+      animation-delay: #{$i / 10}s;
+    }
+}

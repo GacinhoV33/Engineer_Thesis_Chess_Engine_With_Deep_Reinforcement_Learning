@@ -4,6 +4,7 @@ import PlayGame from './components/PlayGame';
 import NavbarComponent from './components/NavbarComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Thesis from './components/Thesis';
+import Author from './components/Author';
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
           <Route
             element={<Thesis/>}
             path='/thesis'
+          />
+          <Route
+            element={<Author/>}
+            path='/about'
           />
         </Routes>
       </header>

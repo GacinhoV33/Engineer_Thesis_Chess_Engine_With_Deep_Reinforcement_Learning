@@ -9,6 +9,7 @@ import IOSSwitch from "./SwitchCustomed";
 import { Chess, Move } from "chess.js";
 import NewGameModal from "./NewGameModal";
 import LoadPGNModal from "./LoadPGNModal";
+import ShowResult, { Result } from "./ShowResult";
 
 export interface PlayGameProps {}
 export type PlayMode =
@@ -26,6 +27,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [isStockfish, setIsStockfish] = useState<boolean>(false);
   const [boardOrientation, setBoardOrientation] = useState<ChessColor>('white')
   const [lastMoveStack, setLastMoveStack] = useState<Move[]>([])
+  const [result, setResult] = useState<Result>('none')  
 
   // AlphaZero Engine stuff
 
@@ -87,9 +89,11 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
             </div>
           </div>
-          <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation}/>
+          <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation} setResult={setResult}/>
         </div>
         <div style={{display: 'flex', flexDirection: 'column', gap: '1vh'}}>
+          {result !== 'none' ? <div style={{textAlign: 'center'}}><ShowResult result={result}/> </div> : <h1> Null </h1>}
+
           <div style={{display: 'flex'}}>
           <div style={{display: 'flex', flexDirection: 'column', gap: '1vh', color: '#EEE', fontSize: '1.25vw', width: '50%', fontWeight: '500', paddingLeft: '5px'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>

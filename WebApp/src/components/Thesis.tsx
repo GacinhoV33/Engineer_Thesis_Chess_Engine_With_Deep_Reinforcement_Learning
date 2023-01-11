@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
-import { AiOutlineRight, AiOutlineLeft } from "react-icons/ai";
+import { AiOutlineRight, AiOutlineLeft, AiOutlineDownload } from "react-icons/ai";
 import "./Thesis.scss";
 import Slider from "@mui/material/Slider";
-
 export interface ThesisProps {}
 
 const Thesis: React.FC<ThesisProps> = ({}) => {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState<number>(1.0);
-  const [slide, setSlide] = useState<number>(50);
+  const [slide, setSlide] = useState<number>(1);
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
     return true;
@@ -92,6 +91,14 @@ const Thesis: React.FC<ThesisProps> = ({}) => {
           />
         </div>
       </div>
+      <p style={{color: '#EEE'}}> Page {pageNumber} of {numPages}</p>
+      <a href={require('./pdfs/Filip_Gacek_Engineering_Thesis.pdf')} download='Virtual Chess Engine with Reinforcement Learning' style={{textDecoration: 'none'}}>
+      <div style={{width: '7vw', height: '5vh', color: '#eee', border: '1px solid #EEE', display: 'flex', flexDirection: 'row', alignItems:'center', justifyContent: 'center', cursor: 'pointer', gap: '4px'}} 
+      className='downloadThesis'
+      >
+          <span style={{fontWeight: '500'}}>Download </span>
+          <AiOutlineDownload style={{height: '3vh', width: '3vh'}}/>
+      </div></a>
     </div>
   );
 };

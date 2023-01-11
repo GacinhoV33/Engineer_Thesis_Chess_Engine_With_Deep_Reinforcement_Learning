@@ -28,7 +28,7 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({}) => {
                 Thesis
               </Nav.Link>
               <Nav.Link href='about' className='navitem'>
-                About Author
+                About
               </Nav.Link>
             </Nav>
           </Container>

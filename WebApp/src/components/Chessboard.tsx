@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import './Chessboard.scss';
-import { Square, Chess, Piece, Move } from 'chess.js';
+import { Square, Chess, Piece, Move, Color } from 'chess.js';
 import { Chessboard} from 'react-chessboard';
 import deepcopy from 'deepcopy';
 import {Howl, Howler} from "howler";
+import ShowResult, { Result } from './ShowResult';
 
 export type ChessColor = 'white' | 'black'
 
 export interface ChessboardComponentProps{
     game: Chess,
     setGame: React.Dispatch<React.SetStateAction<Chess>>,
-    boardOrientation: ChessColor
+    boardOrientation: ChessColor,
+    setResult: React.Dispatch<React.SetStateAction<Result>>,
 }
 
-const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation}) => {
+const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult}) => {
     const sound = new Howl({
         src: require('./sounds/move_sound.wav')
     })
@@ -23,15 +25,41 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         gameCopy.loadPgn(game.pgn());
         const result = gameCopy.move(move);
         setGame(gameCopy);
+        if(gameCopy.isCheckmate()){
+            if(gameCopy.turn() === 'w'){
+                setResult('Black')
+            }
+            else{
+                setResult('White')
+            }
+        }
+        else if(gameCopy.isDraw()){
+            setResult('Draw')
+        }
+        else{
+            setResult('none')
+        }
+        
         return result;
     }
 
-    function onPieceDrop(sourceSquare: Square, targetSquare: Square){
-        const move = makeMove({
-            from: sourceSquare,
-            to: targetSquare,
-            // promotion: 'q' TODO
-        } as Move);
+    function onPieceDrop(sourceSquare: Square, targetSquare: Square, piece: Piece){
+        let move;
+        //@ts-ignore
+        if((piece === 'bP' || piece === 'wP') && (targetSquare.split('')[1] === '1' || targetSquare.split('')[1] === '8') ){
+            console.log('Prom')
+            move = makeMove({
+                from: sourceSquare,
+                to: targetSquare,
+                promotion: 'q' 
+            } as Move);
+        }
+        else{
+            move = makeMove({
+                from: sourceSquare,
+                to: targetSquare,
+            } as Move);
+        }
         if (move === null){
             return false;
         }
@@ -42,7 +70,10 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
 
     return (
     <div className='chessboard-main-styles'>
-        <Chessboard position={game.fen()} onPieceDrop={onPieceDrop} boardOrientation={boardOrientation}/>
+        <Chessboard position={game.fen()} 
+        // @ts-ignore
+        onPieceDrop={onPieceDrop} boardOrientation={boardOrientation}/>
+        {/* {result !== 'none' ? <div style={{textAlign: 'center'}}><ShowResult result={result}/> </div> : null} */}
     </div>
   )
 }

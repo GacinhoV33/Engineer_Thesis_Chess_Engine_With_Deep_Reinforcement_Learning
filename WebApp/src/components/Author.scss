@@ -1,0 +1,48 @@
+.mainAuthor{
+    height: 86vh;
+    border: 3px solid #EEE;
+    display: flex;
+    flex-direction: row;
+    .content{
+        width: 75%;
+        border: 1px solid green;
+        height: 100%;
+        color: #EEE;
+    }
+
+    .rightBar{
+        width: 25%;
+        height: 100%;
+        border: 1px solid red;
+
+    }
+
+    .text-animate{
+      display: inline-block;
+      opacity: 0;
+      animation: bounceIn;
+      animation-duration: 1s;
+      animation-delay: 1s;
+      animation-fill-mode: forwards;
+      min-width: 10px;
+  }
+}
+
+
+
+.text-animate-hover{
+    min-width: 10px;
+    display: inline-block;
+    animation-fill-mode: both;
+  
+    &:hover{
+      animation: rubberBand 1s;
+      color: #ffd700;
+    }
+  }
+
+@for $i from 1 through 55 {
+  .text-animate._#{$i} {
+    animation-delay: #{$i / 10}s;
+  }
+}
