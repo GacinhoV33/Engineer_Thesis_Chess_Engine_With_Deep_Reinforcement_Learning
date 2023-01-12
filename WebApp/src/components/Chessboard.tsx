@@ -13,9 +13,13 @@ export interface ChessboardComponentProps{
     setGame: React.Dispatch<React.SetStateAction<Chess>>,
     boardOrientation: ChessColor,
     setResult: React.Dispatch<React.SetStateAction<Result>>,
+    boardTurn: ChessColor,
+    setBoardTurn:  React.Dispatch<React.SetStateAction<ChessColor>>,
+    lastFiveFen: string[],
+    setLastFiveFen: React.Dispatch<React.SetStateAction<string[]>>
 }
 
-const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult}) => {
+const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult, boardTurn, setBoardTurn, lastFiveFen, setLastFiveFen}) => {
     const sound = new Howl({
         src: require('./sounds/move_sound.wav')
     })
@@ -25,6 +29,11 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         gameCopy.loadPgn(game.pgn());
         const result = gameCopy.move(move);
         setGame(gameCopy);
+        if(result){
+            lastFiveFen.splice(0, 1);
+            setLastFiveFen(prev => [...prev, gameCopy.fen()])
+        }
+        
         if(gameCopy.isCheckmate()){
             if(gameCopy.turn() === 'w'){
                 setResult('Black')
@@ -64,6 +73,7 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
             return false;
         }
         sound.play()
+        boardTurn === 'white' ? setBoardTurn('black') : setBoardTurn('white');
         return true;
     }
 

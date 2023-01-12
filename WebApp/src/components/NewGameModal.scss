@@ -1,0 +1,21 @@
+.engineOn{
+    background: #629924;
+    color: #FFF
+}
+
+.engineOff{
+    &:hover{
+        background: #34322F;
+        color: #BBB
+    }
+}
+
+.page-item{
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%);
+    --bs-pagination-color: #BABABA;
+    --bs-pagination-bg: #161512;
+    --bs-pagination-active-bg: #629924;
+    --bs-pagination-active-border-color: #629924;
+    --bs-pagination-hover-color: #EEE;
+    --bs-pagination-hover-bg: #181715;
+}

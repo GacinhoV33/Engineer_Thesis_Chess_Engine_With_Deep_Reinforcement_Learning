@@ -8,12 +8,36 @@
         border: 1px solid green;
         height: 100%;
         color: #EEE;
+        padding: 5%;
     }
+    
 
     .rightBar{
         width: 25%;
         height: 100%;
         border: 1px solid red;
+        padding: 5%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .photo{
+          height: 20vh;
+          width: 100%;
+        }
+
+        .icons{
+          color: #EEE;
+          display: flex;
+          gap: 1vw;
+          .icon-social{
+            width: 2vw;
+            height: 2vw;
+            cursor: pointer;
+            &:hover{
+              color: #ffd700;
+            }
+          }
+        }
 
     }
 

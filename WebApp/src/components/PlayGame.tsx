@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ChessboardComponent, { ChessColor } from "./Chessboard";
 import PlayModes from "./PlayModes";
 import "./PlayGame.scss";
@@ -6,17 +6,26 @@ import GameEvaluation from "./GameEvaluation";
 import RightMenu from "./RightMenu";
 import LeftMenu from "./LeftMenu";
 import IOSSwitch from "./SwitchCustomed";
-import { Chess, Move } from "chess.js";
+import { Chess, Color, Move } from "chess.js";
 import NewGameModal from "./NewGameModal";
 import LoadPGNModal from "./LoadPGNModal";
 import ShowResult, { Result } from "./ShowResult";
+import { json } from "stream/consumers";
 
-export interface PlayGameProps {}
+export type EngineType = 'AlphaZero' | 'Stockfish'
+export interface PlayGameProps {
+
+}
 export type PlayMode =
   | "Player-Engine"
   | "Player-Player"
   | "Engine-Engine"
   | "None";
+
+export type GameStatus = 'not-started' | 'ongoing' | 'ended'
+
+
+const API_URL = 'http://127.0.0.1:5000/'
 
 const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const currentMode: PlayMode = "None";
@@ -26,10 +35,17 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [isAlpha, setIsAlpha] = useState<boolean>(true);
   const [isStockfish, setIsStockfish] = useState<boolean>(false);
   const [boardOrientation, setBoardOrientation] = useState<ChessColor>('white')
-  const [lastMoveStack, setLastMoveStack] = useState<Move[]>([])
-  const [result, setResult] = useState<Result>('none')  
-
+  const [lastMoveStack, setLastMoveStack] = useState<Move[]>([]);
+  const [result, setResult] = useState<Result>('none');
+  const [gameStatus, setGameStatus] = useState<GameStatus>('not-started');
+  const [userPieceColor, setUserPieceColor] = useState<ChessColor>('white');
+  const [boardTurn, setBoardTurn] = useState<ChessColor>('white');
+  const [engine, setEngine] = useState<EngineType>('AlphaZero')
   // AlphaZero Engine stuff
+  const startingFen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+  const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
+  
+  
 
   function handleNewGame(){
     setShowModal(true);
@@ -70,6 +86,46 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     }
   }
 
+  function handleNewGameModal(color: ChessColor) {
+    setGame(new Chess());
+    setUserPieceColor(color);
+    setBoardOrientation(color);
+    setShowModal(false);
+  }
+
+  useEffect(() => {
+    if(game.fen() === startingFen){
+      setGameStatus('not-started');
+    }
+    else if(game.isCheckmate() || game.isDraw() || game.isStalemate()){
+      setGameStatus('ended');
+    }
+    else{
+      setGameStatus('ongoing');
+    }
+  }, [game])
+
+  console.log(gameStatus)
+  // const requestBestMoveOptions = {
+  //   method: 'GET',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+
+  //   }, 
+    // body: JSON.stringify({
+    //   positions: lastFiveFen
+    // })
+  // }
+  // useEffect(() => {
+  //   const makeEngineMove = async () =>{
+  //       fetch(
+  //       API_URL + `best_move/` + 'positions='+ JSON.stringify(lastFiveFen),
+  //       requestBestMoveOptions
+  //     ).then(response => console.log(response.json()));
+  //   }
+  //   makeEngineMove()
+  // }, [boardTurn]);
+  console.log("Board turn: ", boardTurn)
   return (
     <div className="playgame-main">
       <div className="chessboard-menu-position">
@@ -81,15 +137,15 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <div style={{width: '1vw'}}>
-                <img src={require('./images/chess2.png')} alt='lol' style={{width: '1vw'}}/>
+                <img src={require('./images/chess2.png')} alt='lol1' style={{width: '1vw'}}/>
               </div>
               <GameEvaluation value={isAlpha ? -0.2 : 0.2} engineType='MyEngine'/>
               <div style={{width: '1vw'}}>
-                <img src={require('./images/chess1.png')} alt='lol' style={{width: '1vw'}}/>
+                <img src={require('./images/chess1.png')} alt='lol2' style={{width: '1vw'}}/>
               </div>
             </div>
           </div>
-          <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation} setResult={setResult}/>
+          <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation} setResult={setResult} boardTurn={boardTurn} setBoardTurn={setBoardTurn} lastFiveFen={lastFiveFen} setLastFiveFen={setLastFiveFen}/>
         </div>
         <div style={{display: 'flex', flexDirection: 'column', gap: '1vh'}}>
           {result !== 'none' ? <div style={{textAlign: 'center'}}><ShowResult result={result}/> </div> : <h1> Null </h1>}
@@ -102,7 +158,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>
                   AlphaZero
-                  <IOSSwitch  defaultChecked  onClick={handleEngine} checked={isAlpha}/>
+                  <IOSSwitch onClick={handleEngine} checked={isAlpha}/>
               </div>
           </div>
           <div style={{width: '50%', padding: '5%',}}>
@@ -123,7 +179,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
           </div>
           </div>
           <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo} handleDraw={handleDraw} handleGiveUp={handleGiveUp} handleRedo={handleRedo}/>
-          {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal}/>}
+          {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal} setEngine={setEngine} engine={engine} handleNewGame={handleNewGameModal}/>}
           {showLoadModal && <LoadPGNModal setGame={setGame} setShowLoadModal={setShowLoadModal} showLoadModal={showLoadModal}/>}
         </div>
       </div>
