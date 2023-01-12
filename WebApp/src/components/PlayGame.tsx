@@ -45,7 +45,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const startingFen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
   
-  
+  console.log(lastFiveFen)
 
   function handleNewGame(){
     setShowModal(true);
@@ -106,25 +106,25 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   }, [game])
 
   console.log(gameStatus)
-  // const requestBestMoveOptions = {
-  //   method: 'GET',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-
-  //   }, 
-    // body: JSON.stringify({
-    //   positions: lastFiveFen
-    // })
-  // }
-  // useEffect(() => {
-  //   const makeEngineMove = async () =>{
-  //       fetch(
-  //       API_URL + `best_move/` + 'positions='+ JSON.stringify(lastFiveFen),
-  //       requestBestMoveOptions
-  //     ).then(response => console.log(response.json()));
-  //   }
-  //   makeEngineMove()
-  // }, [boardTurn]);
+  const requestBestMoveOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }, 
+    body: JSON.stringify({
+      positions: lastFiveFen.join(';')
+    })
+  }
+  console.log(requestBestMoveOptions)
+  useEffect(() => {
+    const makeEngineMove = async () =>{
+        fetch(
+        API_URL + `best_move`,
+        requestBestMoveOptions
+      ).then(response => console.log(response.json()));
+    }
+    makeEngineMove()
+  }, [boardTurn]);
   console.log("Board turn: ", boardTurn)
   return (
     <div className="playgame-main">
