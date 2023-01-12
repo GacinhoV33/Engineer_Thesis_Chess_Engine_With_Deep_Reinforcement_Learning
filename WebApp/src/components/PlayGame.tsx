@@ -116,13 +116,19 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     })
   }
   console.log(requestBestMoveOptions)
-  useEffect(() => {
+  useEffect( () => {
     const makeEngineMove = async () =>{
-        fetch(
-        API_URL + `best_move`,
-        requestBestMoveOptions
-      ).then(response => console.log(response.json()));
+      //   fetch(
+      //   API_URL + `best_move`,
+      //   requestBestMoveOptions
+      // ).then(response => console.log(response.json()));
+      const data = await (
+        await fetch(
+          API_URL + `best_move`,
+          requestBestMoveOptions)).json();
+      console.log(data)
     }
+    
     makeEngineMove()
   }, [boardTurn]);
   console.log("Board turn: ", boardTurn)

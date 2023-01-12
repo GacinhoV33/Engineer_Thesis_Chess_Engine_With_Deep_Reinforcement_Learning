@@ -27,7 +27,7 @@ def best_reinf_move(history):
     board = chess.Board(fen=history[-1])
     rootEdge = Edge(None, None)
     rootNode = Node(board, rootEdge, history)
-    mcts = MCTS(model, 400)
+    mcts = MCTS(model, 200)
     moveProbs = mcts.search(rootNode)
     moveProbsSorted = sorted(moveProbs, key=lambda x: x[1], reverse=True)
     nextMove = moveProbsSorted[0] # best Move according to probs
