@@ -20,6 +20,7 @@ class BestMove(Resource):
         data = args['positions']
         positions = data.split(';')
         best_move = best_reinf_move(positions)
+        print(f"Done: {best_move}")
         return {'bestMove': f'{best_move}'}, 200
 
 

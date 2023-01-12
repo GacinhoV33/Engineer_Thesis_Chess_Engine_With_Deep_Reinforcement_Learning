@@ -16,10 +16,11 @@ export interface ChessboardComponentProps{
     boardTurn: ChessColor,
     setBoardTurn:  React.Dispatch<React.SetStateAction<ChessColor>>,
     lastFiveFen: string[],
-    setLastFiveFen: React.Dispatch<React.SetStateAction<string[]>>
+    setLastFiveFen: React.Dispatch<React.SetStateAction<string[]>>,
+    userPieceColor: ChessColor,
 }
 
-const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult, boardTurn, setBoardTurn, lastFiveFen, setLastFiveFen}) => {
+const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult, boardTurn, setBoardTurn, lastFiveFen, setLastFiveFen, userPieceColor}) => {
     const sound = new Howl({
         src: require('./sounds/move_sound.wav')
     })
@@ -54,9 +55,9 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
 
     function onPieceDrop(sourceSquare: Square, targetSquare: Square, piece: Piece){
         let move;
+        if(userPieceColor !== boardTurn) {return false}
         //@ts-ignore
         if((piece === 'bP' || piece === 'wP') && (targetSquare.split('')[1] === '1' || targetSquare.split('')[1] === '8') ){
-            console.log('Prom')
             move = makeMove({
                 from: sourceSquare,
                 to: targetSquare,

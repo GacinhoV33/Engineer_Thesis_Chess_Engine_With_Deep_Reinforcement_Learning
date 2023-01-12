@@ -45,7 +45,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const startingFen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
   
-  console.log(lastFiveFen)
+  // console.log(lastFiveFen)
 
   function handleNewGame(){
     setShowModal(true);
@@ -91,6 +91,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setUserPieceColor(color);
     setBoardOrientation(color);
     setShowModal(false);
+    setBoardTurn('white')
   }
 
   useEffect(() => {
@@ -105,7 +106,6 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     }
   }, [game])
 
-  console.log(gameStatus)
   const requestBestMoveOptions = {
     method: 'POST',
     headers: {
@@ -115,23 +115,26 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
       positions: lastFiveFen.join(';')
     })
   }
-  console.log(requestBestMoveOptions)
+
   useEffect( () => {
-    const makeEngineMove = async () =>{
-      //   fetch(
-      //   API_URL + `best_move`,
-      //   requestBestMoveOptions
-      // ).then(response => console.log(response.json()));
-      const data = await (
-        await fetch(
-          API_URL + `best_move`,
-          requestBestMoveOptions)).json();
-      console.log(data)
+    const makeEngineMove = async () => {
+      const data = await ( await fetch(API_URL + `best_move`, requestBestMoveOptions)).json();
+      const gameCopy = new Chess();
+      gameCopy.loadPgn(game.pgn());
+      const move = {
+          from: data.bestMove.slice(0, 2),
+          to: data.bestMove.slice(2, 4),
+        }
+      const result = gameCopy.move(move);
+      if(result){
+        setGame(gameCopy);
+        boardTurn === 'white' ? setBoardTurn('black') : setBoardTurn('white');
+      }
     }
-    
-    makeEngineMove()
+    if(boardTurn !== userPieceColor) {
+      makeEngineMove()
+    }
   }, [boardTurn]);
-  console.log("Board turn: ", boardTurn)
   return (
     <div className="playgame-main">
       <div className="chessboard-menu-position">
@@ -151,10 +154,20 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
             </div>
           </div>
-          <ChessboardComponent game={game} setGame={setGame} boardOrientation={boardOrientation} setResult={setResult} boardTurn={boardTurn} setBoardTurn={setBoardTurn} lastFiveFen={lastFiveFen} setLastFiveFen={setLastFiveFen}/>
+          <ChessboardComponent 
+          game={game} 
+          setGame={setGame} 
+          boardOrientation={boardOrientation} 
+          setResult={setResult} 
+          boardTurn={boardTurn} 
+          setBoardTurn={setBoardTurn} 
+          lastFiveFen={lastFiveFen} 
+          setLastFiveFen={setLastFiveFen}
+          userPieceColor={userPieceColor}
+          />
         </div>
         <div style={{display: 'flex', flexDirection: 'column', gap: '1vh'}}>
-          {result !== 'none' ? <div style={{textAlign: 'center'}}><ShowResult result={result}/> </div> : <h1> Null </h1>}
+          {result !== 'none' ? <div style={{textAlign: 'center'}}><ShowResult result={result}/> </div> : <div style={{height: '5vh'}}></div>}
 
           <div style={{display: 'flex'}}>
           <div style={{display: 'flex', flexDirection: 'column', gap: '1vh', color: '#EEE', fontSize: '1.25vw', width: '50%', fontWeight: '500', paddingLeft: '5px'}}>
