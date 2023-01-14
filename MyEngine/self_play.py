@@ -42,15 +42,15 @@ class SelfPlay:
             rootNode = Node(board, rootEdge, history)
             mcts = MCTS(self.model)
             moveProbs = mcts.search(rootNode)
-            moveProbsSorted = sorted(moveProbs, key= lambda x: x[1], reverse=True)
-            probs = np.array([prob[1] for prob in moveProbsSorted])
-            rand_idx = np.random.multinomial(1, probs)
-            idx = np.where(rand_idx == 1)[0][0]
-            nextMove = moveProbsSorted[idx]
+            moveProbsSorted = sorted(moveProbs, key= lambda x: x[3], reverse=True)
+            # probs = np.array([prob[1] for prob in moveProbsSorted])
+            # rand_idx = np.random.multinomial(1, probs)
+            # idx = np.where(rand_idx == 1)[0][0]
+            nextMove = moveProbsSorted[0]
             moveProbabilitiesData.append(moveProbsSorted)
             print(f"move {move_counter}: {nextMove[0]}")
-            print(chess.pgn.Game.from_board(board))
-
+            # print(chess.pgn.Game.from_board(board))
+            print(board)
             if not stock_flag or move_counter == LIMIT_OF_MOVES_PER_GAME:
                 board.push(nextMove[0])
         else:

@@ -97,6 +97,7 @@ class MCTS:
                     allBestChilds.append(child_node)
 
             if maxUctChild is None:
+                print('Im in')
                 return self.select(random.choice(allBestChilds))
             else:
                 if len(allBestChilds) > 1:

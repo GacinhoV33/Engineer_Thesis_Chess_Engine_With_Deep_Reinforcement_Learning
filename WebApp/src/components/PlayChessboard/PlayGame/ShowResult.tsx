@@ -1,6 +1,6 @@
 import React from 'react'
-import AnimatedLetters from './AnimatedLetters'
-import './AnimatedLetters.scss';
+import AnimatedLetters from '../../AnimatedLetters'
+import '../../AnimatedLetters.scss';
 export type Result = 'White' | 'Black' | 'Draw' | 'none'
 
 export interface ShowResultProps{

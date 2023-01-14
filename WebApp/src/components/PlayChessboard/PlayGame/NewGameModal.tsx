@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { EngineType } from "./PlayGame";
 import "./NewGameModal.scss";
 import Tooltip from "react-bootstrap/Tooltip";
-import { ChessColor } from "./Chessboard";
+import { ChessColor } from "../Chessboard/Chessboard";
 export interface NewGameModalProps {
   setNewGame: React.Dispatch<React.SetStateAction<Chess>>;
   showModal: boolean;
@@ -172,7 +172,7 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
         >
           <div>
             <img
-              src={require("./images/chess2.png")}
+              src={require("../../images/chess2.png")}
               alt="lol1"
               style={{ width: "2.5vw", cursor: "pointer" }}
               onClick={() => handleNewGame('black')}
@@ -180,7 +180,7 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
           </div>
           <div>
             <img
-              src={require("./images/chess1.png")}
+              src={require("../../images/chess1.png")}
               alt="lol2"
               style={{ width: "2.5vw", cursor: "pointer" }}
               onClick={() => handleNewGame('white')}

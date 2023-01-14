@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ChessboardComponent, { ChessColor } from "./Chessboard";
-import PlayModes from "./PlayModes";
+import ChessboardComponent, { ChessColor } from "../Chessboard/Chessboard";
 import "./PlayGame.scss";
 import GameEvaluation from "./GameEvaluation";
 import RightMenu from "./RightMenu";
@@ -40,7 +39,8 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [gameStatus, setGameStatus] = useState<GameStatus>('not-started');
   const [userPieceColor, setUserPieceColor] = useState<ChessColor>('white');
   const [boardTurn, setBoardTurn] = useState<ChessColor>('white');
-  const [engine, setEngine] = useState<EngineType>('AlphaZero')
+  const [engine, setEngine] = useState<EngineType>('AlphaZero');
+  const [evaluation, setEvaluation] = useState<number>(0);
   // AlphaZero Engine stuff
   const startingFen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
@@ -90,8 +90,10 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setGame(new Chess());
     setUserPieceColor(color);
     setBoardOrientation(color);
+    setGameStatus('not-started');
     setShowModal(false);
-    setBoardTurn('white')
+    setBoardTurn('white');
+    setEvaluation(0);
   }
 
   useEffect(() => {
@@ -131,9 +133,18 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
         boardTurn === 'white' ? setBoardTurn('black') : setBoardTurn('white');
       }
     }
+
+    const getEvaluation = async () => {
+      // TODO - add stockfish in request
+      const data = await ( await fetch(API_URL + `pos_eval`, requestBestMoveOptions)).json();
+      const evaluation_data = data.evaluation;
+      setEvaluation(evaluation_data);
+    }
     if(boardTurn !== userPieceColor) {
       makeEngineMove()
     }
+    getEvaluation();
+
   }, [boardTurn]);
   return (
     <div className="playgame-main">
@@ -146,11 +157,11 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
               </div>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <div style={{width: '1vw'}}>
-                <img src={require('./images/chess2.png')} alt='lol1' style={{width: '1vw'}}/>
+                <img src={require('../../images/chess2.png')} alt='lol1' style={{width: '1vw'}}/>
               </div>
-              <GameEvaluation value={isAlpha ? -0.2 : 0.2} engineType='MyEngine'/>
+              <GameEvaluation value={evaluation} engineType='MyEngine'/>
               <div style={{width: '1vw'}}>
-                <img src={require('./images/chess1.png')} alt='lol2' style={{width: '1vw'}}/>
+                <img src={require('../../images/chess1.png')} alt='lol2' style={{width: '1vw'}}/>
               </div>
             </div>
           </div>

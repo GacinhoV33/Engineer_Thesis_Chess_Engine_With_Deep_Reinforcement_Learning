@@ -78,7 +78,7 @@ const Thesis: React.FC<ThesisProps> = ({}) => {
           />
         </div>
         <Document
-          file={require("./pdfs/Filip_Gacek_Engineering_Thesis.pdf")}
+          file={require("../pdfs/Filip_Gacek_Engineering_Thesis.pdf")}
           onLoadSuccess={onDocumentLoadSuccess}
         >
           <Page pageNumber={pageNumber} scale={scale / 100 + 1.0} />
@@ -92,7 +92,7 @@ const Thesis: React.FC<ThesisProps> = ({}) => {
         </div>
       </div>
       <p style={{color: '#EEE'}}> Page {pageNumber} of {numPages}</p>
-      <a href={require('./pdfs/Filip_Gacek_Engineering_Thesis.pdf')} download='Virtual Chess Engine with Reinforcement Learning' style={{textDecoration: 'none'}}>
+      <a href={require('../pdfs/Filip_Gacek_Engineering_Thesis.pdf')} download='Virtual Chess Engine with Reinforcement Learning' style={{textDecoration: 'none'}}>
       <div style={{width: '7vw', height: '5vh', color: '#eee', border: '1px solid #EEE', display: 'flex', flexDirection: 'row', alignItems:'center', justifyContent: 'center', cursor: 'pointer', gap: '4px'}} 
       className='downloadThesis'
       >

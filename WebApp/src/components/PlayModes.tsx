@@ -1,5 +1,5 @@
 import React from 'react'
-import { PlayMode } from './PlayGame'
+import { PlayMode } from './PlayChessboard/PlayGame/PlayGame'
 
 export interface PlayModesProps{
     currentMode: PlayMode,

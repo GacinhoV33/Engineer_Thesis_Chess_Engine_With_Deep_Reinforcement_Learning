@@ -14,11 +14,11 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({}) => {
         <Navbar>
           <Container>
             <Nav className='navContent'>
-              <Navbar.Brand href="home" className='brand'>
+              <Navbar.Brand href="/" className='brand'>
                 Deep Chess
-                <img src={require('./images/logo_grey.png')} alt='logo' style={{width: '3vw'}}/>
+                <img src={require('../images/logo_grey.png')} alt='logo' style={{width: '3vw'}}/>
               </Navbar.Brand>
-              <Nav.Link href='play' className='navitem'>
+              <Nav.Link href='/' className='navitem'>
                 Play
               </Nav.Link>
               <Nav.Link href='engine' className='navitem'>

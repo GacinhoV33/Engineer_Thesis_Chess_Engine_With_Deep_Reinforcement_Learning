@@ -4,7 +4,7 @@ import { Square, Chess, Piece, Move, Color } from 'chess.js';
 import { Chessboard} from 'react-chessboard';
 import deepcopy from 'deepcopy';
 import {Howl, Howler} from "howler";
-import ShowResult, { Result } from './ShowResult';
+import ShowResult, { Result } from '../PlayGame/ShowResult';
 
 export type ChessColor = 'white' | 'black'
 
@@ -22,7 +22,7 @@ export interface ChessboardComponentProps{
 
 const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult, boardTurn, setBoardTurn, lastFiveFen, setLastFiveFen, userPieceColor}) => {
     const sound = new Howl({
-        src: require('./sounds/move_sound.wav')
+        src: require('../../sounds/move_sound.wav')
     })
     Howler.volume(0.7);
     function makeMove(move: Move){
