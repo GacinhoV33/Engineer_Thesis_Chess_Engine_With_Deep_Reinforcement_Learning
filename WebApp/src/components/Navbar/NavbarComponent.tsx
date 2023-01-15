@@ -21,9 +21,9 @@ const NavbarComponent: React.FC<NavbarComponentProps> = ({}) => {
               <Nav.Link href='/' className='navitem'>
                 Play
               </Nav.Link>
-              <Nav.Link href='engine' className='navitem'>
+              {/* <Nav.Link href='engine' className='navitem'>
                 Engine
-              </Nav.Link>
+              </Nav.Link> */}
               <Nav.Link href='thesis' className='navitem'>
                 Thesis
               </Nav.Link>

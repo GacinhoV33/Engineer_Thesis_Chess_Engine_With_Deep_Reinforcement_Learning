@@ -17,6 +17,26 @@
         align-items: center;
         gap: 5vw;
     }
+
+    .engineSpinner{
+        // border: 1px solid #eee;
+        height: 10vh;
+        color: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5vh;
+        .engineIcon{
+            width: 2.75vh;
+            height: 2.75vh;
+        }
+        .engineText{
+            margin-right: 1vh;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 2.5vh;
+        }
+        // display: flex;
+    }
 }
 
 .border-orientation{

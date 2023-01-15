@@ -18,18 +18,23 @@ export interface ChessboardComponentProps{
     lastFiveFen: string[],
     setLastFiveFen: React.Dispatch<React.SetStateAction<string[]>>,
     userPieceColor: ChessColor,
+    setEngineStatus: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult, boardTurn, setBoardTurn, lastFiveFen, setLastFiveFen, userPieceColor}) => {
+const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame, boardOrientation, setResult, boardTurn, setBoardTurn, lastFiveFen, setLastFiveFen, userPieceColor, setEngineStatus}) => {
     const sound = new Howl({
         src: require('../../sounds/move_sound.wav')
     })
     Howler.volume(0.7);
     function makeMove(move: Move){
+
         const gameCopy = new Chess();
         gameCopy.loadPgn(game.pgn());
         const result = gameCopy.move(move);
         setGame(gameCopy);
+        if(userPieceColor === boardTurn){
+            setEngineStatus(true)
+        }  
         if(result){
             lastFiveFen.splice(0, 1);
             setLastFiveFen(prev => [...prev, gameCopy.fen()])
@@ -37,14 +42,18 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         
         if(gameCopy.isCheckmate()){
             if(gameCopy.turn() === 'w'){
-                setResult('Black')
+                setResult('Black');
+                setEngineStatus(false);
             }
             else{
+                setEngineStatus(false);
                 setResult('White')
             }
         }
         else if(gameCopy.isDraw()){
-            setResult('Draw')
+            setResult('Draw');
+            setEngineStatus(false);
+
         }
         else{
             setResult('none')

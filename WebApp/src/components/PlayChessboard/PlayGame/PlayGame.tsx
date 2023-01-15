@@ -9,7 +9,8 @@ import { Chess, Color, Move } from "chess.js";
 import NewGameModal from "./NewGameModal";
 import LoadPGNModal from "./LoadPGNModal";
 import ShowResult, { Result } from "./ShowResult";
-import { json } from "stream/consumers";
+import Spinner  from "react-bootstrap/Spinner";
+import { SiGodotengine } from 'react-icons/si';
 
 export type EngineType = 'AlphaZero' | 'Stockfish'
 export interface PlayGameProps {
@@ -39,14 +40,16 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [gameStatus, setGameStatus] = useState<GameStatus>('not-started');
   const [userPieceColor, setUserPieceColor] = useState<ChessColor>('white');
   const [boardTurn, setBoardTurn] = useState<ChessColor>('white');
-  const [engine, setEngine] = useState<EngineType>('AlphaZero');
-  const [evaluation, setEvaluation] = useState<number>(0);
+  
+
+
   // AlphaZero Engine stuff
   const startingFen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
-  
+  const [engine, setEngine] = useState<EngineType>('AlphaZero');
+  const [evaluation, setEvaluation] = useState<number>(0);
   // console.log(lastFiveFen)
-
+  const [engineStatus, setEngineStatus] = useState<boolean>(false);
   function handleNewGame(){
     setShowModal(true);
   }
@@ -61,6 +64,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     const gameCopy = new Chess();
     gameCopy.loadPgn(game.pgn());
     setGame(gameCopy);
+    setEngineStatus(false);
   }
 
   function handleDraw(){
@@ -83,6 +87,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     if(redoMove) {
       newGame.move(redoMove)
       setGame(newGame);
+      setEngineStatus(false);
     }
   }
 
@@ -94,6 +99,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setShowModal(false);
     setBoardTurn('white');
     setEvaluation(0);
+    setEngineStatus(false);
   }
 
   useEffect(() => {
@@ -131,13 +137,14 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
       if(result){
         setGame(gameCopy);
         boardTurn === 'white' ? setBoardTurn('black') : setBoardTurn('white');
+        setEngineStatus(false)
       }
     }
 
     const getEvaluation = async () => {
       // TODO - add stockfish in request
       const data = await ( await fetch(API_URL + `pos_eval`, requestBestMoveOptions)).json();
-      const evaluation_data = data.evaluation;
+      const evaluation_data = Number(data.evaluation);
       setEvaluation(evaluation_data);
     }
     if(boardTurn !== userPieceColor) {
@@ -158,6 +165,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <div style={{width: '1vw'}}>
                 <img src={require('../../images/chess2.png')} alt='lol1' style={{width: '1vw'}}/>
+                
               </div>
               <GameEvaluation value={evaluation} engineType='MyEngine'/>
               <div style={{width: '1vw'}}>
@@ -175,6 +183,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
           lastFiveFen={lastFiveFen} 
           setLastFiveFen={setLastFiveFen}
           userPieceColor={userPieceColor}
+          setEngineStatus={setEngineStatus}
           />
         </div>
         <div style={{display: 'flex', flexDirection: 'column', gap: '1vh'}}>
@@ -209,8 +218,14 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
           </div>
           </div>
           <RightMenu handleNewGame={handleNewGame} handleLoadPGN={handleLoadPGN} handleUndo={handleUndo} handleDraw={handleDraw} handleGiveUp={handleGiveUp} handleRedo={handleRedo}/>
+          {engineStatus ? <div className="engineSpinner">
+            <SiGodotengine className="engineIcon"/>
+            <span className="engineText">Engine is thinking </span> 
+            <Spinner/>
+          </div> : <div style={{height: '10vh'}}> </div>}
           {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal} setEngine={setEngine} engine={engine} handleNewGame={handleNewGameModal}/>}
           {showLoadModal && <LoadPGNModal setGame={setGame} setShowLoadModal={setShowLoadModal} showLoadModal={showLoadModal}/>}
+
         </div>
       </div>
     </div>
