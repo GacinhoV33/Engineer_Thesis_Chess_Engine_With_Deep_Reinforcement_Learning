@@ -2,4 +2,4 @@
 __pycache__
 .idea
 stockfish
-MyEngine/models/model_12_res_.keras
+MyEngine/playground.py
