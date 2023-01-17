@@ -3,7 +3,6 @@
 
 from tensorflow.keras.models import Model
 import chess
-import numpy as np
 from network import create_init_positions, create_init_probabilities
 from MonteCarloTreeSearch import Edge, Node, MCTS
 from model import load_existing_model

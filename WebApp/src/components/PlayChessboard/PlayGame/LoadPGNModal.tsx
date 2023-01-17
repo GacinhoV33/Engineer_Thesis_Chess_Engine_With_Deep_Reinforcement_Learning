@@ -23,7 +23,7 @@ const LoadPGNModal: React.FC<LoadPGNModalProps> = ({setGame, setShowLoadModal, s
 
     return (
     <Modal show={showLoadModal} centered onHide={() => setShowLoadModal(false)}>
-        <Modal.Title style={{textAlign: 'center', fontWeight: '700', fontSize: '3.25vh'}}>
+        <Modal.Title style={{textAlign: 'center', fontWeight: '700', fontSize: '3.25vh', color: '#444', marginTop: '1vh'}}>
           Insert PGN
         </Modal.Title>
         <Modal.Body style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly'}}>

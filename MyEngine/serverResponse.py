@@ -7,7 +7,6 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from MonteCarloTreeSearch import Edge, Node, MCTS, N_MCTS_ITERATION
 from flask_cors import CORS
-import numpy as np
 
 from network import FEN_to_layers
 
@@ -22,7 +21,6 @@ class BestMove(Resource):
         data = args['positions']
         positions = data.split(';')
         best_move = best_reinf_move(positions)
-        print(f"Done: {best_move}")
         return {'bestMove': f'{best_move}'}, 200
 
 
@@ -56,8 +54,5 @@ def server():
     api.add_resource(PositionEvaluation, '/pos_eval')
     app.run()
 
-"""Test string - http://127.0.0.1:5000/best_move?positions={%22positions%22:%20[%228/8/8/4p1K1/2k1P3/8/8/8%20b%20-%20-%200%201%22,%20%224k2r/6r1/8/8/8/8/3R4/R3K3%20w%20Qk%20-%200%201%22,%20%228/5k2/3p4/1p1Pp2p/pP2Pp1P/P4P1K/8/8%20b%20-%20-%2090%2032%22,%20%228/5k2/3p4/1p1Pp2p/pP2Pp1P/P4P1K/8/8%20b%20-%20-%2099%2050%22,%20%228/5k2/3p4/1p1Pp2p/pP2Pp1P/P4P1K/8/8%20b%20-%20-%2099%2050%22]}"""
-
 if __name__ == '__main__':
     server()
-    # bestMove([])

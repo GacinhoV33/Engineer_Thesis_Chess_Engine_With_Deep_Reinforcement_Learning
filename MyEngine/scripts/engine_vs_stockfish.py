@@ -110,5 +110,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # playGame(1, chess.WHITE)
-    # pass
+

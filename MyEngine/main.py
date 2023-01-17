@@ -9,8 +9,8 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLineEdit, QLabel, QPushButto
 from network import create_init_positions
 from settings import width, height, pos_height, pos_width, svg_x, svg_y, num_2_letter
 from PyQt5 import QtTest
-from random import choice, random
-
+from random import choice
+from simpleMinMaxEngine import MinMaxEngine
 from MonteCarloTreeSearch import Edge, Node, MCTS
 import numpy as np
 from model import load_existing_model
@@ -82,32 +82,27 @@ class MainWindow(QWidget):
 
     def setHumanVsEngine(self):
         self.mode = "HumanVsEngine"
-        print(self.mode)
 
     def playEngineMove(self, maxDepth, color, engine_type: str='minmax'):
         if engine_type == 'minmax':
             engine = MinMaxEngine(self.chessboard, maxDepth, color)
             best_move = engine.getBestMove()
         elif engine_type == 'Reinf':
-            engine = 0
             best_move = 'a2a3'
             pass
         else:
             raise ValueError('Wrong engine name!')
 
-        print("BEST MOVE: ", best_move)
         self.chessboard.push(best_move)
         self.isWhite = not self.isWhite
         self._updateBoard()
 
     def clickMoveButtonMethod(self, move=None):
-        print(self.chessboard.fen())
         user_input = self.moveInput.text()
         if not move:
             move = chess.Move.from_uci(user_input) # check from square
         if move in self.chessboard.legal_moves:
             self.chessboard.push(move)
-            print(self.chessboard.result() == '*')
             self.save_pgn()
             self._updateBoard()
             if self.isWhite:
@@ -121,7 +116,6 @@ class MainWindow(QWidget):
         with open(f'pgn/last_pgn.txt', 'w') as file:
             file.write(str(node.game().mainline()))
             file.write('Result: ' + str(node.headers['Result']))
-        print("PGN of game saved.")
 
     def playReinf_move(self):
         black_move = self.best_Reinf_move(self.chessboard)[0]
@@ -207,106 +201,8 @@ class MainWindow(QWidget):
             QtTest.QTest.qWait(1000)
             black_move = self.best_Reinf_move(self.chessboard)[0]
             self.clickMoveButtonMethod(black_move)
-            print(f"Move: {i}")
         self.save_pgn()
 
-
-class MinMaxEngine:
-    def __init__(self, board, maxDepth, color):
-        self.board = board
-        self.maxDepth = maxDepth
-        self.color = color
-
-    def getBestMove(self):
-        return self.minmax_engine(None, 1)
-
-    def evalFunc(self):
-        compt = 0
-        for i in range(64):
-            compt += self.squareResPoints(chess.SQUARES[i])
-        compt += self.mateOpportunity() + self.openning() + 0.001 * random()
-        return compt
-
-    def mateOpportunity(self):
-        if self.board.legal_moves.count() == 0:
-            if self.board.turn == self.color:
-                return -999
-            else:
-                return 999
-        else:
-            return 0
-
-    def openning(self):
-        if self.board.fullmove_number < 10:
-            if self.board.turn == self.color:
-                return 1/30 * self.board.legal_moves.count()
-            else:
-                return -1/30 * self.board.legal_moves.count()
-        else:
-            return 0
-
-    #takes a square as input and returns the corresponding han's Berliner's system value of it's resident
-    def squareResPoints(self, square):
-        pieceValue = 0
-        if self.board.piece_type_at(square) == chess.PAWN:
-            pieceValue = 1
-        elif self.board.piece_type_at(square) == chess.ROOK:
-            pieceValue = 5.1
-        elif self.board.piece_type_at(square) == chess.KNIGHT:
-            pieceValue = 3.2
-        elif self.board.piece_type_at(square) == chess.KING:
-            pieceValue = 1
-        elif self.board.piece_type_at(square) == chess.QUEEN:
-            pieceValue = 8.8
-        elif self.board.piece_type_at(square) == chess.BISHOP:
-            pieceValue = 3.33
-        if self.board.color_at(square) != self.color:
-            return -pieceValue
-        else:
-            return pieceValue
-
-    def minmax_engine(self, candicate, depth):
-        if depth == self.maxDepth or self.board.legal_moves.count() == 0:
-            return self.evalFunc()
-        else:
-            #get list of legal moves of the current position
-            moveList = list(self.board.legal_moves)
-            #initialise newCandidate
-            newCandidate = None
-            if depth % 2 != 0:
-                newCandidate = float("-inf")
-            else:
-                newCandidate = float("inf")
-            for i in moveList:
-                self.board.push(i)
-                # get the value of move i
-                value = self.minmax_engine(newCandidate, depth+1)
-                #if maximizing(engine's turn)
-                if value > newCandidate and depth % 2 != 0:
-                    if depth == 1:
-                        move = i
-                    newCandidate = value
-
-                #if minimizing humans turn
-                elif value < newCandidate and depth % 2 == 0:
-                    newCandidate = value
-
-                #alpha-beta pruning cuts
-                #if previous move was made by the engine
-                if candicate is not None and value < candicate and depth % 2 == 0:
-                    self.board.pop() # removing last move from the board
-                    break
-                # if previous move was made by the human
-                elif candicate is not None and value > candicate and depth % 2 != 0:
-                    self.board.pop()  # removing last move from the board
-                    break
-
-                self.board.pop()
-
-            if depth > 1:
-                return newCandidate
-            else:
-                return move
 
 
 if __name__ == "__main__":
