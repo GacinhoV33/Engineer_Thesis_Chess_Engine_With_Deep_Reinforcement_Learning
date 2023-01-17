@@ -1,12 +1,10 @@
 .right-menu{
     width: 20vw;
     height: 30vh;
-    // border: 1px solid white;
     display: grid;
     color: #CCC;
     font-size: 1.5vw;
     gap: 10px;
-    // gap: 15px;
 
     .menu-tile{
         padding: 10px;
@@ -30,7 +28,6 @@
             
             background-color: #312b23ab;
             color: #EEE;
-            // color: red;
         }
     }
 }

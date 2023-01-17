@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './RightMenu.scss';
-import Button from 'react-bootstrap/Button';
 import {GrUndo, GrRedo} from 'react-icons/gr';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BsCheckLg, BsX} from 'react-icons/bs';
@@ -49,7 +48,6 @@ const [showGiveUp, setShowGiveUp] = useState<boolean>(true);
                 Undo
                 <GrUndo/>
             </div>
-           {/* After clicking open modal with color of piece. */}
         </div>
         <div style={{gridColumnStart: '2', gridColumnEnd: '3', gridRowStart: '1', gridRowEnd: '2'}} onClick={handleLoadPGN}>
             <div className='menu-tile'>

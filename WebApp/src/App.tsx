@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PlayGame from './components/PlayChessboard/PlayGame/PlayGame';
 import NavbarComponent from './components/Navbar/NavbarComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';

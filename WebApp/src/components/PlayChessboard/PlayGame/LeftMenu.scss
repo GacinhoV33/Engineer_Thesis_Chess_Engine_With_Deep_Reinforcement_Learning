@@ -1,8 +1,6 @@
 .left-menu{
     width: 20vw;
     height: 70vh;
-    // border: 1px solid white;
-
     .header{
         border-bottom: 1px solid white;
         height: 10%;
@@ -27,7 +25,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    // overflow-y: scroll;
     .main-left-menu{
         max-height: 65vh;
         width: 17vw;

@@ -4,14 +4,12 @@
   }
   font-family: 'Source Sans Pro', sans-serif;
   height: 86vh;
-  // border: 3px solid #EEE;
   display: flex;
   flex-direction: row;
   align-items: center;
   .content{
       width: 75%;
       font-size: 20px;
-      // border-right: 1px solid green;
       height: 100%;
       color: #EEE;
       padding: 4% 7.5% 7.5% 7.5%;
@@ -34,9 +32,9 @@
 
     .rightBar{
         width: 25%;
+        min-width: 300px;
         height: 100%;
-        // border: 1px solid red;
-        padding: 2.25%;
+        padding: 2.2%;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -44,12 +42,11 @@
         .photo{
           height: 35vh;
           min-height: 275px;
-          // width: 100%;
         }
 
         .author-cite{
           color: #EEE;
-          font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+          font-family: 'Tiro Devanagari Hindi', serif;
           margin-bottom: 4vh;
           text-align: center;
         }

@@ -5,7 +5,7 @@ import GameEvaluation from "./GameEvaluation";
 import RightMenu from "./RightMenu";
 import LeftMenu from "./LeftMenu";
 import IOSSwitch from "./SwitchCustomed";
-import { Chess, Color, Move } from "chess.js";
+import { Chess, Move } from "chess.js";
 import NewGameModal from "./NewGameModal";
 import LoadPGNModal from "./LoadPGNModal";
 import ShowResult, { Result } from "./ShowResult";
@@ -142,7 +142,6 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     }
 
     const getEvaluation = async () => {
-      // TODO - add stockfish in request
       const data = await ( await fetch(API_URL + `pos_eval`, requestBestMoveOptions)).json();
       const evaluation_data = Number(data.evaluation);
       setEvaluation(evaluation_data);

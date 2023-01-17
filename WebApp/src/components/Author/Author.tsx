@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import AnimatedLetters from '../AnimatedLetters';
 import './Author.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,7 +7,7 @@ import { faGithub, faLinkedin, faGoogle, faReact, faHtml5, faSass, faPython, faD
 import ReactRoundedImage from 'react-rounded-image';
 import Alert from 'react-bootstrap/Alert';
 import {AiOutlineCopy} from 'react-icons/ai';
-import {SiAbbrobotstudio, SiTypescript} from 'react-icons/si';
+import {SiTypescript} from 'react-icons/si';
 import {SiMicrosoftazure} from 'react-icons/si'
 export interface AuthorProps{
 
@@ -29,9 +29,6 @@ setTimeout(() => {
   };
 }, 32)
 
-const name = 'Filip Gacek';
-const job = 'Software Engineer';
-
 function copyEmailToClipboard(){
   // Do stuff 
   navigator.clipboard.writeText('gacek.filip12@gmail.com');
@@ -39,7 +36,6 @@ function copyEmailToClipboard(){
   setTimeout(() => {
     setShowAlert(false)
   }, 4000);
-  // Then show alert positive about correct copying of email
 }
 
 return (
@@ -126,7 +122,7 @@ return (
         </div>
         <div style={{width: '0.1vw', borderLeft:  '1px solid #eee', height: '80%'}}></div>
         <div className='rightBar'>
-        <h4 className='author-cite'> <q> The beauty of artificial intelligence should go in pair with great designs. </q> </h4>
+        <h4 className='author-cite'> <q> The beauty of artificial intelligence should go in pair with great designs.</q> </h4>
           <div className='photo'>
             <ReactRoundedImage 
               image={require('../images/profile_prototype.jpg')}

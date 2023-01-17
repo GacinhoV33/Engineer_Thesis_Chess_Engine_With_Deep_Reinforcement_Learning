@@ -4,7 +4,6 @@ import Pagination from "react-bootstrap/Pagination";
 import Modal from "react-bootstrap/Modal";
 import { EngineType } from "./PlayGame";
 import "./NewGameModal.scss";
-import Tooltip from "react-bootstrap/Tooltip";
 import { ChessColor } from "../Chessboard/Chessboard";
 export interface NewGameModalProps {
   setNewGame: React.Dispatch<React.SetStateAction<Chess>>;
@@ -187,13 +186,6 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
             />
           </div>
         </div>
-
-        {/* <Button variant='secondary' style={{width: '6vw'}} onClick={handleYes}>
-            Yes
-          </Button>
-          <Button variant='secondary' style={{width: '6vw'}} onClick={handleNo}>
-            No
-          </Button> */}
       </Modal.Body>
     </Modal>
   );

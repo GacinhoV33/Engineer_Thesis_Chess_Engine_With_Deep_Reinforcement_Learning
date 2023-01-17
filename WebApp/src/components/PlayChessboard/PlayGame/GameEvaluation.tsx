@@ -13,8 +13,6 @@ function evalToProgress(value: number){
 }
 
 const GameEvaluation: React.FC<GameEvaluationProps> = ({value, engineType}) => {
-  // TODO evaluation for stockfish and my engine
-  console.log(value)
   return (
     <div style={{width: '75vh', margin: '0vh 2vh'}}>
         <ProgressBar now={evalToProgress(value)} label={value > 0 ? `+${value.toFixed(2)}` : `${value.toFixed(2)}`} variant='secondary'/>

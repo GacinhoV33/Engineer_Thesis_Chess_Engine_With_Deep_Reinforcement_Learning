@@ -11,7 +11,11 @@ const ShowResult: React.FC<ShowResultProps> = ({result}) => {
 const text = result + ' Won';
 return (
     <h1>
-    <AnimatedLetters text={text} idx={1} letterClass='text-animate'/>
+      <AnimatedLetters 
+        text={text} 
+        idx={1} 
+        letterClass='text-animate'
+      />
     </h1>
   )
 }

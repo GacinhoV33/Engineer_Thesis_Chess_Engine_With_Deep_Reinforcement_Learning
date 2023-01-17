@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import './Chessboard.scss';
 import { Square, Chess, Piece, Move, Color } from 'chess.js';
 import { Chessboard} from 'react-chessboard';
-import deepcopy from 'deepcopy';
 import {Howl, Howler} from "howler";
-import ShowResult, { Result } from '../PlayGame/ShowResult';
+import  { Result } from '../PlayGame/ShowResult';
 
 export type ChessColor = 'white' | 'black'
 
@@ -93,7 +92,6 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         <Chessboard position={game.fen()} 
         // @ts-ignore
         onPieceDrop={onPieceDrop} boardOrientation={boardOrientation}/>
-        {/* {result !== 'none' ? <div style={{textAlign: 'center'}}><ShowResult result={result}/> </div> : null} */}
     </div>
   )
 }

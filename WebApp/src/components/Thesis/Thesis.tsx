@@ -3,6 +3,7 @@ import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
 import { AiOutlineRight, AiOutlineLeft, AiOutlineDownload } from "react-icons/ai";
 import "./Thesis.scss";
 import Slider from "@mui/material/Slider";
+
 export interface ThesisProps {}
 
 const Thesis: React.FC<ThesisProps> = ({}) => {
