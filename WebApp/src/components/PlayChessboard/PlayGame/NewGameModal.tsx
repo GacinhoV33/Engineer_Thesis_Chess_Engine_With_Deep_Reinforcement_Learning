@@ -11,7 +11,9 @@ export interface NewGameModalProps {
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   engine: EngineType;
   setEngine: React.Dispatch<React.SetStateAction<EngineType>>;
-  handleNewGame: (color: ChessColor) => void
+  handleNewGame: (color: ChessColor) => void,
+  depth: number,
+  setDepth: React.Dispatch<React.SetStateAction<number>>
 }
 
 const NewGameModal: React.FC<NewGameModalProps> = ({
@@ -21,8 +23,9 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
   engine,
   setEngine,
   handleNewGame,
+  setDepth,
+  depth,
 }) => {
-  const [active, setActive] = useState<number>(1);
   function handleYes() {
     setNewGame(new Chess());
     setShowModal(false);
@@ -145,11 +148,11 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
               }}
             >
               <Pagination>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((level, index) => (
+                {[1, 2, 3, 4, 5].map((level) => (
                   <Pagination.Item
                     key={level}
-                    active={active === level}
-                    onClick={() => setActive(level)}
+                    active={depth === level}
+                    onClick={() => setDepth(level)}
                   >
                     {level}
                   </Pagination.Item>

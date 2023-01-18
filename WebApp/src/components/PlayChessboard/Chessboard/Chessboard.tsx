@@ -31,9 +31,9 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         gameCopy.loadPgn(game.pgn());
         const result = gameCopy.move(move);
         setGame(gameCopy);
-        if(userPieceColor === boardTurn){
-            setEngineStatus(true)
-        }  
+        // if(userPieceColor === boardTurn){
+        //     setEngineStatus(true)
+        // }  
         if(result){
             lastFiveFen.splice(0, 1);
             setLastFiveFen(prev => [...prev, gameCopy.fen()])
@@ -81,6 +81,9 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         if (move === null){
             return false;
         }
+        if(userPieceColor === boardTurn){
+            setEngineStatus(true)
+        }  
         sound.play()
         boardTurn === 'white' ? setBoardTurn('black') : setBoardTurn('white');
         return true;

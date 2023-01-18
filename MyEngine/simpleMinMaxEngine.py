@@ -1,3 +1,8 @@
+import random
+
+import chess
+
+
 class MinMaxEngine:
     def __init__(self, board, maxDepth, color):
         self.board = board
@@ -12,7 +17,7 @@ class MinMaxEngine:
         for i in range(64):
             compt += self.squareResPoints(chess.SQUARES[i])
 
-        compt += self.mateOpportunity() + self.openning() + 0.001 * random()
+        compt += self.mateOpportunity() + self.openning() + 0.001 * random.random()
         return compt
 
     def mateOpportunity(self):
@@ -58,7 +63,11 @@ class MinMaxEngine:
             return self.evalFunc()
         else:
             # get list of legal moves of the current position
-            moveList = list(self.board.legal_moves)
+            if depth > 4:
+                moveList = random.choices(list(self.board.legal_moves), k=5)
+            else:
+                moveList = list(self.board.legal_moves)
+
             # initialise newCandidate
             newCandidate = None
             if depth % 2 != 0:

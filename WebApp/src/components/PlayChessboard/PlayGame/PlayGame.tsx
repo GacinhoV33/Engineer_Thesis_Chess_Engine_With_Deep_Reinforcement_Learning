@@ -28,7 +28,6 @@ export type GameStatus = 'not-started' | 'ongoing' | 'ended'
 const API_URL = 'http://127.0.0.1:5000/'
 
 const PlayGame: React.FC<PlayGameProps> = ({}) => {
-  const currentMode: PlayMode = "None";
   const [game, setGame] = useState<Chess>(new Chess());
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLoadModal, setShowLoadModal] = useState<boolean>(false);
@@ -48,7 +47,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
   const [engine, setEngine] = useState<EngineType>('AlphaZero');
   const [evaluation, setEvaluation] = useState<number>(0);
-  // console.log(lastFiveFen)
+  const [depth, setDepth] = useState<number>(1);
   const [engineStatus, setEngineStatus] = useState<boolean>(false);
   function handleNewGame(){
     setShowModal(true);
@@ -120,7 +119,21 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
       'Content-Type': 'application/json',
     }, 
     body: JSON.stringify({
-      positions: lastFiveFen.join(';')
+      positions: lastFiveFen.join(';'),
+      engine: engine,
+      depth: depth
+    })
+  }
+
+  const requestEvalOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }, 
+    body: JSON.stringify({
+      positions: lastFiveFen.join(';'),
+      engine: engine,
+      depth: depth
     })
   }
 
@@ -142,7 +155,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     }
 
     const getEvaluation = async () => {
-      const data = await ( await fetch(API_URL + `pos_eval`, requestBestMoveOptions)).json();
+      const data = await ( await fetch(API_URL + `pos_eval`, requestEvalOptions)).json();
       const evaluation_data = Number(data.evaluation);
       setEvaluation(evaluation_data);
     }
@@ -222,7 +235,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
             <span className="engineText">Engine is thinking </span> 
             <Spinner/>
           </div> : <div style={{height: '10vh'}}> </div>}
-          {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal} setEngine={setEngine} engine={engine} handleNewGame={handleNewGameModal}/>}
+          {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal} setEngine={setEngine} engine={engine} handleNewGame={handleNewGameModal} setDepth={setDepth} depth={depth}/>}
           {showLoadModal && <LoadPGNModal setGame={setGame} setShowLoadModal={setShowLoadModal} showLoadModal={showLoadModal}/>}
 
         </div>
