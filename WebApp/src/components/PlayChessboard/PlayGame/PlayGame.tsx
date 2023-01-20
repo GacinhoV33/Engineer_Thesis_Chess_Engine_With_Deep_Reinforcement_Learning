@@ -25,7 +25,7 @@ export type PlayMode =
 export type GameStatus = 'not-started' | 'ongoing' | 'ended'
 
 
-const API_URL = 'http://127.0.0.1:5000/'
+const API_URL = 'https://devchessenginev4.thankfuldune-975094e7.westeurope.azurecontainerapps.io/'
 
 const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [game, setGame] = useState<Chess>(new Chess());
@@ -121,7 +121,8 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     body: JSON.stringify({
       positions: lastFiveFen.join(';'),
       engine: engine,
-      depth: depth
+      depth: depth,
+      mcts_it: 5,
     })
   }
 
@@ -133,7 +134,8 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     body: JSON.stringify({
       positions: lastFiveFen.join(';'),
       engine: engine,
-      depth: depth
+      depth: depth,
+      mcts_it: 5,
     })
   }
 

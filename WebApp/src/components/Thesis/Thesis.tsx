@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
+import React, { useEffect, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+// import { Document, Page } from "react-pdf/dist/esm/entry.webpack5";
 import { AiOutlineRight, AiOutlineLeft, AiOutlineDownload } from "react-icons/ai";
 import "./Thesis.scss";
 import Slider from "@mui/material/Slider";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
 
 export interface ThesisProps {}
 
@@ -35,6 +39,9 @@ const Thesis: React.FC<ThesisProps> = ({}) => {
   const handleSlide = (event: Event, newValue: number | number[]) => {
     setSlide(newValue as number);
   };
+
+  useEffect(() => { pdfjs.GlobalWorkerOptions.workerSrc =`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;});
+  
   return (
     <div
       style={{
@@ -82,7 +89,8 @@ const Thesis: React.FC<ThesisProps> = ({}) => {
           file={require("../pdfs/Filip_Gacek_Engineering_Thesis.pdf")}
           onLoadSuccess={onDocumentLoadSuccess}
         >
-          <Page pageNumber={pageNumber} scale={scale / 100 + 1.0} />
+          <Page 
+          pageNumber={pageNumber} scale={scale / 100 + 1.0} />
         </Document>
         <div style={{ width: "5vw", textAlign: "end" }}>
           <AiOutlineRight
