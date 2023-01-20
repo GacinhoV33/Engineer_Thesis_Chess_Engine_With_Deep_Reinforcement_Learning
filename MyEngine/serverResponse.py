@@ -76,5 +76,6 @@ def server():
     api.add_resource(PositionEvaluation, '/pos_eval')
     app.run()
 
+
 if __name__ == '__main__':
     server()
