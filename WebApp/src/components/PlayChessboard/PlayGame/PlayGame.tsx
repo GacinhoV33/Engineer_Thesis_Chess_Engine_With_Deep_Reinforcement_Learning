@@ -38,7 +38,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [result, setResult] = useState<Result>('none');
   const [gameStatus, setGameStatus] = useState<GameStatus>('not-started');
   const [userPieceColor, setUserPieceColor] = useState<ChessColor>('white');
-  const [boardTurn, setBoardTurn] = useState<ChessColor>('white');
+  const [boardTurn, setBoardTurn] = useState<ChessColor | 'none'>('white');
   
 
 
@@ -91,16 +91,26 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   }
 
   function handleNewGameModal(color: ChessColor) {
-    setGame(new Chess());
+    if(color === 'black'){
+      const newGame = new Chess()
+      newGame.loadPgn('1. d4')
+      setGame(newGame)
+      setBoardTurn('black');
+
+    }
+    else{
+      setGame(new Chess());
+      setBoardTurn('white');
+
+    }
+    setResult('none')
     setUserPieceColor(color);
+    setEngineStatus(false);
     setBoardOrientation(color);
     setGameStatus('not-started');
     setShowModal(false);
-    setBoardTurn('white');
     setEvaluation(0);
-    setEngineStatus(false);
   }
-
   useEffect(() => {
     if(game.fen() === startingFen){
       setGameStatus('not-started');
@@ -165,7 +175,6 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
       makeEngineMove()
     }
     getEvaluation();
-
   }, [boardTurn]);
   return (
     <div className="playgame-main">

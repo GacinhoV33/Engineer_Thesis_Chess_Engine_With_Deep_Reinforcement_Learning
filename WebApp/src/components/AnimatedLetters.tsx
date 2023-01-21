@@ -9,7 +9,6 @@ export interface AnimatedLettersProps{
 
 const AnimatedLetters: React.FC<AnimatedLettersProps> = ({letterClass, text, idx}) => {
   const arr = text.split('');
-  console.log(arr)
   return (
     <span>
       {arr.map((letter, i) => (

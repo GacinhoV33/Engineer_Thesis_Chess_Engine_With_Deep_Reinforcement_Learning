@@ -12,8 +12,8 @@ export interface ChessboardComponentProps{
     setGame: React.Dispatch<React.SetStateAction<Chess>>,
     boardOrientation: ChessColor,
     setResult: React.Dispatch<React.SetStateAction<Result>>,
-    boardTurn: ChessColor,
-    setBoardTurn:  React.Dispatch<React.SetStateAction<ChessColor>>,
+    boardTurn: ChessColor | 'none',
+    setBoardTurn:  React.Dispatch<React.SetStateAction<ChessColor | 'none'>>,
     lastFiveFen: string[],
     setLastFiveFen: React.Dispatch<React.SetStateAction<string[]>>,
     userPieceColor: ChessColor,
@@ -31,28 +31,29 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         gameCopy.loadPgn(game.pgn());
         const result = gameCopy.move(move);
         setGame(gameCopy);
-        // if(userPieceColor === boardTurn){
-        //     setEngineStatus(true)
-        // }  
+    
         if(result){
             lastFiveFen.splice(0, 1);
             setLastFiveFen(prev => [...prev, gameCopy.fen()])
+            if(userPieceColor === boardTurn && !game.isGameOver()){
+                setEngineStatus(true)
+            }  
         }
         
         if(gameCopy.isCheckmate()){
             if(gameCopy.turn() === 'w'){
                 setResult('Black');
                 setEngineStatus(false);
+                // setGameStatus('non-started')
             }
             else{
-                setEngineStatus(false);
                 setResult('White')
+                setEngineStatus(false);
             }
         }
         else if(gameCopy.isDraw()){
             setResult('Draw');
             setEngineStatus(false);
-
         }
         else{
             setResult('none')
@@ -81,11 +82,8 @@ const ChessboardComponent: React.FC<ChessboardComponentProps> = ({ game, setGame
         if (move === null){
             return false;
         }
-        if(userPieceColor === boardTurn){
-            setEngineStatus(true)
-        }  
-        sound.play()
         boardTurn === 'white' ? setBoardTurn('black') : setBoardTurn('white');
+        sound.play()
         return true;
     }
 

@@ -14,7 +14,6 @@ const LoadPGNModal: React.FC<LoadPGNModalProps> = ({setGame, setShowLoadModal, s
     const [value, setValue] = useState<string>('')
     
     function handleLoading(){
-        console.log(value)
         const newGame = new Chess();
         newGame.loadPgn(value)
         setGame(newGame)

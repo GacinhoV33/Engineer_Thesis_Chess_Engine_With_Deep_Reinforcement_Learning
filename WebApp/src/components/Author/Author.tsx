@@ -56,11 +56,12 @@ return (
           <span style={{opacity: opacityLevel}}>
 
           <p style={{marginBottom: '5vh'}}>
-            I graduated Automatics Control and Robotics on AGH University of Science and Technology in 2023. Currently I am doing master's degree in Computer Science.
-            <br></br>I focus my career in fields of web development and artificial intelligence. In my free time I enjoy creating my own applications, discover beauty of AI and play chess. <br></br>That motivated me to chose topic <i>Virtual Chess Engine using Reinforcement Learning</i>. 
-            Present website contains results of my engineer's thesis.
+            I graduated Automatics Control and Robotics on AGH University of Science and Technology in 2023. Currently I am doing master's degree in Computer Science. 
+            <br></br>I focus my career in fields of web development and artificial intelligence. In my free time I enjoy creating my own applications, discover beauty of AI and play chess. 
+            <br></br>My hobbies motivated me to chose topic <i>Virtual Chess Engine using Reinforcement Learning</i>. 
+            Present website contains results of my engineer's thesis. 
           </p>
-          <h3 style={{marginBottom: '2vh'}}> Technological stack used in project</h3>
+          <h3 style={{marginBottom: '2vh'}}> Tech stack used in project: </h3>
           <div style={{display: 'flex', gap: '10vh'}}>
             <div style={{display: 'flex', flexDirection: 'column'}}>
               <div className='language'>
@@ -108,13 +109,6 @@ return (
                   <SiMicrosoftazure className='icon-stack'/>
                   Azure
               </div>
-              {/* <div className='language'>
-                <FontAwesomeIcon 
-                    icon={faSass} 
-                    className='icon-stack'
-                  />  
-                  Sass
-              </div> */}
           </div>
           </div>  
           </span>
@@ -153,11 +147,11 @@ return (
           />    
           
           </div>
-          {showAlert && 
+          {showAlert ? 
             <Alert variant='secondary'>
               <AiOutlineCopy size={24}/>
               gacek.filip12@gmail.com copied to the clipboard.
-            </Alert>}
+            </Alert> : <div style={{height: '8vh'}}> - </div>}
         </div>
     </div>
   )
