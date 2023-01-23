@@ -112,6 +112,13 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
     setGameStatus('not-started');
     setShowModal(false);
     setEvaluation(0);
+    if(engine === 'AlphaZero'){
+      setIsAlpha(true);
+      setIsStockfish(false)
+    }else{
+      setIsAlpha(false);
+      setIsStockfish(true)
+    }
   }
   useEffect(() => {
     if(game.fen() === startingFen){
@@ -147,7 +154,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
       positions: lastFiveFen.join(';'),
       engine: engine,
       depth: depth,
-      mcts_it: 5,
+      mcts_it: 20,
     })
   }
 
@@ -248,7 +255,8 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
             <span className="engineText">Engine is thinking </span> 
             <Spinner/>
           </div> : <div style={{height: '10vh'}}> </div>}
-          {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal} setEngine={setEngine} engine={engine} handleNewGame={handleNewGameModal} setDepth={setDepth} depth={depth}/>}
+          {showModal && <NewGameModal setNewGame={setGame} showModal={showModal} setShowModal={setShowModal} setEngine={setEngine} engine={engine}
+                           handleNewGame={handleNewGameModal} setDepth={setDepth} depth={depth} />}
           {showLoadModal && <LoadPGNModal setGame={setGame} setShowLoadModal={setShowLoadModal} showLoadModal={showLoadModal}/>}
 
         </div>

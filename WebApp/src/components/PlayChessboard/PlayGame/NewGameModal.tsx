@@ -13,7 +13,7 @@ export interface NewGameModalProps {
   setEngine: React.Dispatch<React.SetStateAction<EngineType>>;
   handleNewGame: (color: ChessColor) => void,
   depth: number,
-  setDepth: React.Dispatch<React.SetStateAction<number>>
+  setDepth: React.Dispatch<React.SetStateAction<number>>,
 }
 
 const NewGameModal: React.FC<NewGameModalProps> = ({
@@ -25,27 +25,9 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
   handleNewGame,
   setDepth,
   depth,
+
 }) => {
-  function handleYes() {
-    setNewGame(new Chess());
-    setShowModal(false);
-  }
 
-  function handleNo() {
-    setShowModal(false);
-  }
-
-  function handleWhite(){
-    setNewGame(new Chess());
-    setShowModal(false);
-    // setUserPieceColor('white')
-  }
-
-  function handleBlack(){
-    setNewGame(new Chess());
-    setShowModal(false);
-    // setUserPieceColor('black')
-  }
 
   return (
     <Modal show={showModal} centered onHide={() => setShowModal(false)}>
