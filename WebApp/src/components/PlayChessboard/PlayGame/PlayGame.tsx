@@ -78,6 +78,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   function handleEngine(){
     setIsStockfish(prev => !prev)
     setIsAlpha(prev => !prev)
+    setEngine(prev => prev === 'Stockfish' ? 'AlphaZero' :'Stockfish')
   }
 
   function handleRedo(){
