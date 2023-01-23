@@ -30,7 +30,6 @@ class BestMove(Resource):
             board = chess.Board(fen=current_position)
             engine = MinMaxEngine(board, depth + 1, board.turn)
             best_move = engine.getBestMove()
-            # print(depth)
         return {'bestMove': f'{best_move}'}, 200
 
 
@@ -42,13 +41,16 @@ class PositionEvaluation(Resource):
         parser.add_argument('depth', required=True)
         args = parser.parse_args()
         positions_data, engine_type, depth = args['positions'], args['engine'], int(args['depth'])
+        data = args['positions'].split(';')
         if engine_type == 'AlphaZero':
-            data = args['positions'].split(';')
             input_to_network = [FEN_to_layers(data).reshape(1, 75, 8, 8)]
             _, evaluation = model.predict(input_to_network)
             ret_eval = evaluation[0][0]
         else:
-            ret_eval = 0.3
+            engine = MinMaxEngine(chess.Board(fen=data[-1]), 2, chess.WHITE)
+            evaluation = engine.evalFunc() / 20
+            ret_eval = min([abs(evaluation), 1])
+            ret_eval = -ret_eval if evaluation < 0 else ret_eval
         return {'evaluation': f'{ret_eval}'}, 200
 
 
@@ -61,11 +63,6 @@ def best_reinf_move(history):
     moveProbsSorted = sorted(moveProbs, key=lambda x: x[3], reverse=True)
     nextMove = moveProbsSorted[0] # best Move according to probs
     return nextMove[0]
-
-
-def best_MinMax_move(fen: str):
-    best_move = None
-    return best_move
 
 
 def server():

@@ -25,7 +25,8 @@ export type PlayMode =
 export type GameStatus = 'not-started' | 'ongoing' | 'ended'
 
 
-const API_URL = 'https://devchessenginev4.thankfuldune-975094e7.westeurope.azurecontainerapps.io/'
+// const API_URL = 'http://127.0.0.1:5000/';
+const API_URL = 'https://devchessenginev4.thankfuldune-975094e7.westeurope.azurecontainerapps.io/';
 
 const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [game, setGame] = useState<Chess>(new Chess());
@@ -132,7 +133,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
       positions: lastFiveFen.join(';'),
       engine: engine,
       depth: depth,
-      mcts_it: 5,
+      mcts_it: 20,
     })
   }
 
@@ -183,7 +184,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
         <div className="chessboard-and-eval">
           <div style={{color: 'white', display: "flex", justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
               <div style={{fontWeight: '500'}}>
-                {isAlpha ? 'AlphaZero Evaluation' : 'Stockfish Evaluation'}
+                {isAlpha ? 'AlphaZero Evaluation' : 'MinMax Evaluation'}
               </div>
             <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
               <div style={{width: '1vw'}}>
@@ -215,7 +216,7 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
           <div style={{display: 'flex'}}>
           <div style={{display: 'flex', flexDirection: 'column', gap: '1vh', color: '#EEE', fontSize: '1.25vw', width: '50%', fontWeight: '500', paddingLeft: '5px'}}>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>
-                  Stockfish
+                  MinMax
                   <IOSSwitch onClick={handleEngine} checked={isStockfish}/>
               </div>
               <div style={{display: 'flex', alignItems: 'center', gap: '1vw', justifyContent: 'space-between'}}>

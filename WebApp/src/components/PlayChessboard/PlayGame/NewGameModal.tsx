@@ -95,7 +95,7 @@ const NewGameModal: React.FC<NewGameModalProps> = ({
             onClick={() => setEngine("Stockfish")}
             className={engine === "Stockfish" ? "engineOn" : "engineOff"}
           >
-            Stockfish
+            MinMax
           </div>
           <div
             style={{
