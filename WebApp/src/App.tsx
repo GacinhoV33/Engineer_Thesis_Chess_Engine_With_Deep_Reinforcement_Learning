@@ -5,6 +5,10 @@ import NavbarComponent from './components/Navbar/NavbarComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Thesis from './components/Thesis/Thesis';
 import Author from './components/Author/Author';
+import ReactGA from 'react-ga';
+
+const TRACKING_ID = ""; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
 
 function App() {
   return (
