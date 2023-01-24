@@ -8,7 +8,9 @@ import ReactRoundedImage from 'react-rounded-image';
 import Alert from 'react-bootstrap/Alert';
 import {AiOutlineCopy} from 'react-icons/ai';
 import {SiTypescript} from 'react-icons/si';
-import {SiMicrosoftazure} from 'react-icons/si'
+import {SiMicrosoftazure} from 'react-icons/si';
+import useAnalyticsEventTracker from '../../useAnalyticsEventTracker';
+
 export interface AuthorProps{
 
 }
@@ -37,6 +39,7 @@ function copyEmailToClipboard(){
     setShowAlert(false)
   }, 4000);
 }
+const gaEventTracker = useAnalyticsEventTracker('new_game');
 
 return (
     <div className='mainAuthor'>
@@ -133,7 +136,9 @@ return (
               className='icon-social'
               />   
           </a>
-          <a href='https://www.linkedin.com/in/filip-gacek-423799232/' target="_blank">
+          <a href='https://www.linkedin.com/in/filip-gacek-423799232/' target="_blank" 
+            onClick={() => gaEventTracker('new_game')}
+          >
             <FontAwesomeIcon 
               icon={faLinkedin} 
               className='icon-social'
