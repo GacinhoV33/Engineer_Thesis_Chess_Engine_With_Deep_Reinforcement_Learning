@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes } from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PlayGame from './components/PlayChessboard/PlayGame/PlayGame';
 import NavbarComponent from './components/Navbar/NavbarComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,9 +16,11 @@ function App() {
   //   ReactGA.pageview(window.location.pathname + window.location.search);
   // }, []);
   return (
+    <Router>
     <div className="App">
       <header className="App-header">
         <NavbarComponent/>
+      
         <Routes>
           <Route
             path='/'
@@ -35,6 +37,7 @@ function App() {
         </Routes>
       </header>
     </div>
+    </Router>
   );
 }
 
