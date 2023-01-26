@@ -122,7 +122,7 @@ return (
         <h4 className='author-cite'> <q> The beauty of artificial intelligence should go in pair with great designs.</q> </h4>
           <div className='photo'>
             <ReactRoundedImage 
-              image={require('../images/profile_prototype.jpg')}
+              image={require('../images/profile.png')}
               roundedColor="#EEE"
               imageWidth="275"
               imageHeight="275"

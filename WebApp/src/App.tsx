@@ -13,7 +13,8 @@ ReactGA.initialize(TRACKING_ID);
 
 function App() {
   // useEffect(() => {
-  //   ReactGA.pageview(window.location.pathname + window.location.search);
+  //   ReactGA._gaCommandSendPageview(window.location.pathname + window.location.search, null)
+  //   console.log(window.location.pathname + window.location.search);
   // }, []);
   return (
     <Router>
