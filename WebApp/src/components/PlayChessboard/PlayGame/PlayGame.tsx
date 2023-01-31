@@ -32,8 +32,8 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   const [game, setGame] = useState<Chess>(new Chess());
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showLoadModal, setShowLoadModal] = useState<boolean>(false);
-  const [isAlpha, setIsAlpha] = useState<boolean>(true);
-  const [isStockfish, setIsStockfish] = useState<boolean>(false);
+  const [isAlpha, setIsAlpha] = useState<boolean>(false);
+  const [isStockfish, setIsStockfish] = useState<boolean>(true);
   const [boardOrientation, setBoardOrientation] = useState<ChessColor>('white')
   const [lastMoveStack, setLastMoveStack] = useState<Move[]>([]);
   const [result, setResult] = useState<Result>('none');
@@ -46,9 +46,9 @@ const PlayGame: React.FC<PlayGameProps> = ({}) => {
   // AlphaZero Engine stuff
   const startingFen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
   const [lastFiveFen, setLastFiveFen] = useState<string[]>(['rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1']);
-  const [engine, setEngine] = useState<EngineType>('AlphaZero');
+  const [engine, setEngine] = useState<EngineType>('Stockfish');
   const [evaluation, setEvaluation] = useState<number>(0);
-  const [depth, setDepth] = useState<number>(1);
+  const [depth, setDepth] = useState<number>(3);
   const [engineStatus, setEngineStatus] = useState<boolean>(false);
   function handleNewGame(){
     setShowModal(true);
